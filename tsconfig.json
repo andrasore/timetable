@@ -10,5 +10,9 @@
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true
   },
+  "ts-node": {
+    "esm": true,
+    "transpileOnly": true
+  },
   "include": ["**/*.ts", "**/*.tsx"]
 }

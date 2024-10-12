@@ -1,7 +1,8 @@
 import { fastify } from "fastify";
 import { htmlReply } from "./htmlReply.ts";
+import { routes as reservationRoutes } from "./reservations/routes.ts";
 
-export async function bootstrap(port = 3001) {
+export async function bootstrap(port = 3000) {
   const app = fastify({
     logger: true,
   });

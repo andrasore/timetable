@@ -9,11 +9,16 @@ export async function htmlReply(fastify: FastifyInstance) {
         <!doctype html>
         <html lang="en-US">
         <head>
-            <!-- HTMX framework -->
+            <meta charset="utf-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+
+            <style>
+                @import "https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css";
+            </style>
+
             <script src="https://unpkg.com/htmx.org@2.0.0"></script>
 
-            <meta charset="utf-8" />
-            <title>Tube</title>
+            <title>Munkaidő</title>
         </head>
         <body>
             ${render(element)}

@@ -4,7 +4,10 @@
   "description": "A working time calendar app",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node --loader ts-node/esm src/server.ts",
+    "watch": "nodemon --exec 'node --loader ts-node/esm' -e ts,tsx,json src/server.ts",
+    "lint": "tsc && prettier -c .",
+    "format": "prettier -w ."
   },
   "type": "module",
   "author": "",
@@ -15,9 +18,11 @@
     "kysely": "^0.27.4",
     "preact-render-to-string": "^6.5.5",
     "prettier": "^3.3.2",
+    "ts-node": "^10.9.2",
     "typescript": "^5.6.3"
   },
   "devDependencies": {
+    "nodemon": "^3.1.7",
     "@types/better-sqlite3": "^7.6.11"
   }
 }
