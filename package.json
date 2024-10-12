@@ -1,0 +1,23 @@
+{
+  "name": "munkaido",
+  "version": "1.0.0",
+  "description": "A working time calendar app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "type": "module",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "better-sqlite3": "^11.3.0",
+    "fastify": "^4.28.1",
+    "kysely": "^0.27.4",
+    "preact-render-to-string": "^6.5.5",
+    "prettier": "^3.3.2",
+    "typescript": "^5.6.3"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.11"
+  }
+}
