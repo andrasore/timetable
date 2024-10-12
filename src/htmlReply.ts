@@ -1,29 +1,12 @@
-import { render } from "preact-render-to-string";
-import { type FastifyInstance, type FastifyReply } from "fastify";
-import { type VNode } from "preact";
+import { render } from 'preact-render-to-string';
+import { type FastifyInstance, type FastifyReply } from 'fastify';
+import { type VNode } from 'preact';
+import { pageTemplate } from './pageTemplate.ts';
 
 export async function htmlReply(fastify: FastifyInstance) {
-  fastify.decorateReply("html", function (this: FastifyReply, element: VNode) {
-    this.header("Content-Type", "text/html; charset=utf-8");
-    this.send(`
-        <!doctype html>
-        <html lang="en-US">
-        <head>
-            <meta charset="utf-8" />
-            <meta name="viewport" content="width=device-width, initial-scale=1">
-            <link rel="icon" href="/favicon.svg">
-            <style>
-                @import "https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css";
-            </style>
-
-            <script src="https://unpkg.com/htmx.org@2.0.0"></script>
-
-            <title>Munkaidő</title>
-        </head>
-        <body>
-            ${render(element)}
-        </body>
-        </html>`);
+  fastify.decorateReply('html', function (this: FastifyReply, element: VNode) {
+    this.header('Content-Type', 'text/html; charset=utf-8');
+    this.send(pageTemplate(render(element)));
 
     return this;
   });
@@ -31,10 +14,10 @@ export async function htmlReply(fastify: FastifyInstance) {
 
 // skip-override is requried to pass plugin context to parent fastify instance
 // @ts-expect-error
-htmlReply[Symbol.for("skip-override")] = true;
+htmlReply[Symbol.for('skip-override')] = true;
 
 // Declare our method on fastify
-declare module "fastify" {
+declare module 'fastify' {
   interface FastifyReply {
     html(this: FastifyReply, element: VNode): FastifyReply;
   }

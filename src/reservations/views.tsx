@@ -1,23 +1,32 @@
-export const index = () =>
-<nav class="navbar" role="navigation" aria-label="main navigation">
-  <div class="navbar-brand">
+import { DateTime } from 'luxon';
 
-    <a class="navbar-item" href="/" style="background-image: url(/favicon.svg); background-repeat: no-repeat; background-attachment: fixed; background-size: 100%;">
-    </a>
-  </div>
+type WeekViewProps = {
+    users: string[], weekNo: number, day: string
+};
 
-  <div id="navbarBasicExample" class="navbar-menu">
-    <div class="navbar-end">
-      <div class="navbar-item">
-        <div class="buttons">
-          <a class="button is-primary">
-            <strong>Sign up</strong>
-          </a>
-          <a class="button is-light">
-            Log in
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-</nav>
+export const WeekView = ({ weekNo, users, day }: WeekViewProps) =>
+    <>
+      <h1>{weekNo}. hét, {day}</h1>
+      <table>
+        <thead>
+          <tr>
+            <th>Név</th>
+            <th colspan="12">Hétfő</th>
+            <th colspan="12">Kedd</th>
+            <th colspan="12">Szerda</th>
+            <th colspan="12">Csütörtök</th>
+            <th colspan="12">Péntek</th>
+          </tr>
+        </thead>
+        <tbody>
+          {users.map((user) => (
+            <tr>
+              <td>{user}</td>
+              {[...Array(5).keys()].map(day => {
+                 return [...Array(12).keys()].map(hour => <td>{hour}</td>)
+              })}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </>;
