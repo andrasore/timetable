@@ -11,7 +11,7 @@ export async function htmlReply(fastify: FastifyInstance) {
         <head>
             <meta charset="utf-8" />
             <meta name="viewport" content="width=device-width, initial-scale=1">
-
+            <link rel="icon" href="/favicon.svg">
             <style>
                 @import "https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css";
             </style>
