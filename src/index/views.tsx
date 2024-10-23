@@ -20,7 +20,8 @@ const CenteredHorizontalFlex = `
 
 export const renderIndex = async (request: FastifyRequest) => {
   const WeekView = await renderWeekView();
-  const LoginForm = await renderLoginForm(request);
+  const username = request.cookies['username'];
+  const LoginForm = await renderLoginForm(username);
 
   return () => <>
     <header>

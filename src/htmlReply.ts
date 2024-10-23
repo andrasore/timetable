@@ -5,6 +5,12 @@ import { type VNode } from 'preact';
 export async function htmlReply(fastify: FastifyInstance) {
   fastify.decorateReply('html', function (this: FastifyReply, element: VNode) {
     this.header('Content-Type', 'text/html; charset=utf-8');
+    this.send(render(element));
+    return this;
+  });
+
+  fastify.decorateReply('htmlRoot', function (this: FastifyReply, element: VNode) {
+    this.header('Content-Type', 'text/html; charset=utf-8');
     this.send(`<!doctype html>
       <html lang="en-US">
           <head>
@@ -35,5 +41,6 @@ htmlReply[Symbol.for('skip-override')] = true;
 declare module 'fastify' {
   interface FastifyReply {
     html(this: FastifyReply, element: VNode): FastifyReply;
+    htmlRoot(this: FastifyReply, element: VNode): FastifyReply;
   }
 }

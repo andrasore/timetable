@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node --import=./register.js src/server.ts",
-    "watch": "nodemon --exec 'node --import=./register.js' -e ts,tsx,json src/server.ts",
+    "watch": "nodemon --exec 'node --inspect --import=./register.js' -e ts,tsx,json src/server.ts",
     "lint": "tsc && prettier -c .",
     "format": "prettier -w .",
     "migrate": "node --import=./register.js scripts/migrateToLatest.ts"
