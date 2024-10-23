@@ -14,8 +14,9 @@ export async function up(db: Kysely<unknown>): Promise<void> {
     .addColumn('id', 'integer', (col) =>
       col.primaryKey().notNull().autoIncrement(),
     )
-    .addColumn('userId', 'text', (col) => col.notNull())
-    .addColumn('day', 'text', (col) => col.notNull())
+    .addColumn('user_id', 'text', (col) => col.notNull())
+    .addColumn('date', 'text', (col) => col.notNull())
+    .addColumn('type', 'text', (col) => col.notNull())
     .addColumn('from_hour', 'integer', (col) => col.notNull())
     .addColumn('to_hour', 'integer', (col) => col.notNull())
     .execute();

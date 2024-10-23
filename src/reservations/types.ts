@@ -6,7 +6,8 @@ export interface ReservationTable {
   // made optional in inserts and updates.
   id: Generated<number>;
   user_id: number;
-  day: Date;
+  date: string;
+  type: 'office' | 'wfh';
   from_hour: number;
   to_hour: number;
 }

@@ -1,5 +1,6 @@
-import { WeekView } from '../reservations/views.tsx';
-import { LoggedInForm, NotLoggedInForm } from '../users/views.tsx';
+import type { FastifyRequest } from 'fastify';
+import { renderWeekView } from '../reservations/views.tsx';
+import { renderLoginForm } from '../users/views.tsx';
 
 const HomeButtonStyle = `
   min-width: 1.5cm;
@@ -17,10 +18,11 @@ const CenteredHorizontalFlex = `
   gap: 20px;
 `;
 
-type IndexProps = { users: string[], username?: string, weekNo: number, day: string };
+export const renderIndex = async (request: FastifyRequest) => {
+  const WeekView = await renderWeekView();
+  const LoginForm = await renderLoginForm(request);
 
-export const Index = ({ users, username, weekNo, day }: IndexProps) => (
-  <>
+  return () => <>
     <header>
       <nav role="navigation" aria-label="main navigation">
         <div style={CenteredHorizontalFlex}>
@@ -28,16 +30,12 @@ export const Index = ({ users, username, weekNo, day }: IndexProps) => (
           <h1>Munkaidő</h1>
         </div>
         <ul>
-          {username ? (
-            <LoggedInForm username={username} />
-          ) : (
-            <NotLoggedInForm />
-          )}
+          <LoginForm />
         </ul>
       </nav>
     </header>
     <main>
-        <WeekView weekNo={weekNo} users={users} day={day} />
+        <WeekView />
     </main>
-  </>
-);
+  </>;
+};

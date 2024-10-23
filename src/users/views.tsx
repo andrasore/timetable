@@ -5,7 +5,7 @@ const HorizontalFlex = `
   gap: 20px;
 `;
 
-export const LoggedInForm = ({ username }: { username: string }) => (
+const LoggedInForm = ({ username }: { username: string }) => (
   <form hx-target="this" hx-swap="outerHTML" style={HorizontalFlex}>
     <i>Logged in as: </i>
     <b>{username}</b>
@@ -15,7 +15,7 @@ export const LoggedInForm = ({ username }: { username: string }) => (
   </form>
 );
 
-export const NotLoggedInForm = () => (
+const NotLoggedInForm = () => (
   <form hx-target="this" hx-swap="outerHTML" style={HorizontalFlex}>
     <input
       type="text"
@@ -31,3 +31,13 @@ export const NotLoggedInForm = () => (
     </a>
   </form>
 );
+
+
+export const renderLoginForm = async (username?: string) => {
+  if (username) {
+    return () => <LoggedInForm username={username} />;
+  }
+  else {
+    return () => <NotLoggedInForm />;
+  }
+}
