@@ -21,6 +21,12 @@ export async function htmlReply(fastify: FastifyInstance) {
               <link rel="stylesheet" href="https://unpkg.com/mvp.css">
 
               <script src="https://unpkg.com/htmx.org@2.0.0"></script>
+              <style>
+                @import url("https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,700;1,200&display=swap");
+                :root {
+                  --font-family: Fraunces;
+                }
+              </style>
 
               <title>Munkaidő</title>
           </head>
