@@ -1,6 +1,7 @@
+import { DateTime } from "luxon";
 import type { FastifyRequest } from 'fastify';
-import { renderWeekView } from '../reservations/views.tsx';
-import { renderLoginForm } from '../users/views.tsx';
+import { renderWeekView } from '../reservations/WeekView.tsx';
+import { renderLoginForm } from '../users/LoginForm.tsx';
 
 const HomeButtonStyle = `
   min-width: 1.5cm;
@@ -23,9 +24,12 @@ export const renderIndex = async (request: FastifyRequest) => {
   const username = request.cookies['username'];
   const LoginForm = await renderLoginForm(username);
 
+  const weekNo = DateTime.now().setLocale('hu').weekNumber;
+  const day = DateTime.now().setLocale('hu').toFormat('cccc');
+
   return () => <>
     <header>
-      <nav role="navigation" aria-label="main navigation">
+      <nav role="navigation" aria-label="main navigation" style="margin-bottom: 0px">
         <div style={CenteredHorizontalFlex}>
           <a href="/" style={HomeButtonStyle} />
           <h1>Munkaidő</h1>
@@ -36,7 +40,9 @@ export const renderIndex = async (request: FastifyRequest) => {
       </nav>
     </header>
     <main>
+        <h1>{weekNo}. hét, {day}</h1>
         <WeekView />
+        <button>Edit</button>
     </main>
   </>;
 };

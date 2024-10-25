@@ -9,13 +9,11 @@ const WORKING_DAYS = [1, 2, 3, 4, 5];
 const WORKING_HOURS = [6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
 
 const HourTypeMap = {
-  'office': 'i',
-  'wfh': 'x',
+  'office': 'Iroda :)',
+  'wfh': 'Otthon >:c',
 } as const;
 
 export const renderWeekView = async () => {
-  const weekNo = DateTime.now().setLocale('hu').weekNumber;
-  const day = DateTime.now().setLocale('hu').toFormat('cccc');
   const TableRows = await renderWeekTableRows();
 
   /* NOTE:
@@ -27,6 +25,9 @@ export const renderWeekView = async () => {
 
   return () => <>
       <style>{`
+        table {
+          box-shadow: var(--box-shadow) var(--color-shadow);
+        }
         table td {
           padding: 2;
           min-width: 11px;
@@ -46,8 +47,21 @@ export const renderWeekView = async () => {
           position: relative;
           z-index: 0;
         }
-        table td .office, table td .wfh {
-          background-color: green;
+        table td.office {
+          border-radius: 10px;
+          background-color: #048A81;
+          box-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+        }
+/*
+        table td + td.office {
+          border-top-right-radius: 5px;
+          border-top-left-radius: 5px;
+        }
+*/
+        table td.wfh {
+          border-radius: 10px;
+          background-color: #FDE2FF;
+          box-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
         }
         table th:first-child {
           position: sticky;
@@ -61,11 +75,7 @@ export const renderWeekView = async () => {
           z-index: 1;
           background-color: var(--color-bg);
         }
-        table td .empty {
-          background-color: red;
-        }
     `}</style>
-      <h1>{weekNo}. hét, {day}</h1>
       <table>
         <thead>
           <tr>
@@ -90,24 +100,39 @@ export const renderWeekTableRows = async () => {
       .select(['username'])
       .execute();
 
-    const workingHours = await createWorkingHours(users.map(u => u.username));
+    const reservations = await queryReservationsByUser(users.map(u => u.username));
 
     return () => <>{
       users.map((user) => (
         <tr>
           <td>{user.username}</td>
           {WORKING_DAYS.map(day => {
-            return WORKING_HOURS.map(hour => {
-              const hourType = workingHours?.[user.username]?.[day]?.get(hour);
-              return <td class={hourType}>{hourType && hourType in HourTypeMap ? HourTypeMap[hourType] : ''}</td>;
-            })
+            const currentDay = DateTime.now().startOf('week').plus({ days: day }).toISODate();
+            // Rendering working hours as larger bricks instead of individual
+            // squares
+            const result = [];
+            for (let i = 0; i < WORKING_HOURS.length; i++) {
+              const reservation = reservations[user.username]?.find((f) => f.fromHour == WORKING_HOURS[i] && f.date == currentDay);
+              if (reservation) {
+                // We do a little hacking...
+                // When a reservation is found we must not iterate the hours it
+                // spans
+                const reservationLength = reservation.toHour - reservation.fromHour + 1;
+                i += reservationLength;
+                result.push(<td colspan={reservationLength} class={reservation.type}>{HourTypeMap[reservation.type]}</td>);
+              }
+              else {
+                result.push(<td/>);
+              }
+            }
+            return result;
           })}
         </tr>
       ))
     }</>;
 }
 
-const createWorkingHours = async (users: string[]): Promise<WorkingHours> => {
+const queryReservationsByUser = async (users: string[]) => {
   const startOfWeek = DateTime.now().startOf('week').toISODate();
   const endOfWeek = DateTime.now().endOf('week').toISODate();
 
@@ -119,14 +144,5 @@ const createWorkingHours = async (users: string[]): Promise<WorkingHours> => {
                                   eb('reservation.date', '<=', endOfWeek)]))
                                 .execute();
 
-  const workingHours = Object.fromEntries(users.map(user => ([user, Object.fromEntries(WORKING_DAYS.map(i => [i, new Map()]))])));
-
-  for (const reservation of reservations) {
-    const weekday = DateTime.fromISO(reservation.date).weekday;
-    for (let h = reservation.fromHour; h <= reservation.toHour; h++) {
-      workingHours[reservation.username][weekday].set(h, reservation.type);
-    }
-  }
-
-  return workingHours;
+  return Object.groupBy(reservations, r => r.username);
 }

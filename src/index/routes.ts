@@ -1,5 +1,5 @@
 import type { FastifyInstance } from "fastify";
-import { renderIndex } from './views.tsx';
+import { renderIndex } from './Index.tsx';
 
 export async function routes(fastify: FastifyInstance) {
   fastify.get("/", async function (request, reply) {

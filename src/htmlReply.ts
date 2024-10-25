@@ -20,13 +20,9 @@ export async function htmlReply(fastify: FastifyInstance) {
 
               <link rel="stylesheet" href="https://unpkg.com/mvp.css">
 
-              <script src="https://unpkg.com/htmx.org@2.0.0"></script>
-              <style>
-                @import url("https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,700;1,200&display=swap");
-                :root {
-                  --font-family: Fraunces;
-                }
-              </style>
+              <script defer src="https://unpkg.com/htmx.org@2.0.0"></script>
+
+              <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
               <title>Munkaidő</title>
           </head>

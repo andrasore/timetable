@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify';
 import z from 'zod';
 import db from '../db/db.ts';
-import { renderLoginForm } from './views.tsx';
+import { renderLoginForm } from './LoginForm.tsx';
 
 const LoginReqSchema = z.object({ username: z.string().min(1) });
 

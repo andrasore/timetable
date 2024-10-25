@@ -1,5 +1,5 @@
 import type { FastifyInstance } from 'fastify';
-import { renderWeekTableRows } from './views.tsx';
+import { renderWeekTableRows } from './WeekView.tsx';
 
 export async function routes(fastify: FastifyInstance) {
     fastify.get('/week', async function (request, reply) {
