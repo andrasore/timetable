@@ -42,7 +42,6 @@ export const renderIndex = async (request: FastifyRequest) => {
     <main>
         <h1>{weekNo}. hét, {day}</h1>
         <WeekView />
-        <button>Edit</button>
     </main>
   </>;
 };
