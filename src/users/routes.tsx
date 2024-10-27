@@ -2,6 +2,7 @@ import type { FastifyInstance } from 'fastify';
 import z from 'zod';
 import db from '../db/db.ts';
 import { renderLoginForm } from './LoginForm.tsx';
+import { ErrorToast } from '../util/ErrorToast.tsx';
 
 const LoginReqSchema = z.object({ username: z.string().min(1) });
 
@@ -19,14 +20,16 @@ export async function routes(fastify: FastifyInstance) {
 
     if (!user) {
       const LoginForm = await renderLoginForm();
-      return reply.html(LoginForm());
+      return reply.html(<>
+        <LoginForm/>
+        <ErrorToast message="😤 Nincs ilyen felhasználó!"/>
+      </>);
     }
 
     reply.setCookie('username', username);
 
     const LoginForm = await renderLoginForm(username);
-    // TODO maybe some feedback about wrong username
-    return reply.html(LoginForm());
+    return reply.html(<LoginForm/>);
   });
 
   fastify.post('/register', async function (request, reply) {
@@ -42,18 +45,20 @@ export async function routes(fastify: FastifyInstance) {
       await db.insertInto('user').values({ username }).execute();
       reply.setCookie('username', username);
       const LoginForm = await renderLoginForm(username);
-      // TODO fix this
       reply.header('HX-Trigger', 'newUser');
-      return reply.html(LoginForm());
+      return reply.html(<LoginForm/>);
     }
-    // TODO maybe some feedback about existing username
+
     const LoginForm = await renderLoginForm();
-    return reply.html(LoginForm());
+    return reply.html(<>
+      <LoginForm/>
+      <ErrorToast message="😤 Már létezik ilyen felhasználó!" />
+    </>);
   });
 
   fastify.get('/logout', async function (request, reply) {
     reply.clearCookie('username');
     const LoginForm = await renderLoginForm();
-    return reply.html(LoginForm());
+    return reply.html(<LoginForm/>);
   });
 }

@@ -3,11 +3,11 @@ import { fastify } from 'fastify';
 import FastifyStatic from '@fastify/static';
 import FastifyCookie from '@fastify/cookie';
 import FastifyFormbody from '@fastify/formbody';
-import { htmlReply } from './htmlReply.ts';
+import { htmlReply } from './util/htmlReply.ts';
 import { routes as indexRoutes } from './index/routes.tsx';
 import { routes as userRoutes } from './users/routes.tsx';
 import { routes as reservationRoutes } from './reservations/routes.tsx';
-import { ErrorPage } from './ErrorPage.tsx';
+import { ErrorPage } from './util/ErrorPage.tsx';
 
 export async function bootstrap(port = 3000) {
   const app = fastify({
