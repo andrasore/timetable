@@ -42,6 +42,7 @@ export async function routes(fastify: FastifyInstance) {
       await db.insertInto('user').values({ username }).execute();
       reply.setCookie('username', username);
       const LoginForm = await renderLoginForm(username);
+      // TODO fix this
       reply.header('HX-Trigger', 'newUser');
       return reply.html(LoginForm());
     }

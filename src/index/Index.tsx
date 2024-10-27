@@ -25,7 +25,6 @@ export const renderIndex = async (request: FastifyRequest) => {
   const LoginForm = await renderLoginForm(username);
 
   const weekNo = DateTime.now().setLocale('hu').weekNumber;
-  const day = DateTime.now().setLocale('hu').toFormat('cccc');
 
   return () => <>
     <header>
@@ -40,7 +39,7 @@ export const renderIndex = async (request: FastifyRequest) => {
       </nav>
     </header>
     <main>
-        <h1>{weekNo}. hét, {day}</h1>
+        <h1>{weekNo}. hét</h1>
         <WeekView />
     </main>
   </>;

@@ -5,8 +5,8 @@ type HourType = 'office' | 'wfh';
 type WorkdayData = Map<number, HourType>;
 type WorkingHours = Record<string, Record<number, WorkdayData>>;
 
-const WORKING_DAYS = [1, 2, 3, 4, 5];
-const WORKING_HOURS = [6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
+const WORKING_DAYS = [1, 2, 3, 4, 5] as const;
+const WORKING_HOURS = [6,7,8,9,10,11,12,13,14,15,16,17,18,19,20] as const;
 
 const HourTypeMap = {
   'office': 'i',
@@ -14,8 +14,20 @@ const HourTypeMap = {
   'none': '',
 } as const;
 
+const DAY_NAMES = {
+  1: 'Hétfő',
+  2: 'Kedd',
+  3: 'Szerda',
+  4: 'Csütörtök',
+  5: 'Péntek',
+} as const;
+
 export const renderWeekView = async () => {
-  const TableRows = await renderWeekTableRows();
+  const users = await db.selectFrom('user')
+    .select(['username'])
+    .execute();
+
+  const workingHours = await createWorkingHours(users.map(u => u.username));
 
   /* NOTE:
     Sticky table columns require:
@@ -24,27 +36,23 @@ export const renderWeekView = async () => {
     - larger z index for sticky column
     */
 
-  return () => <div hx-target="this" hx-swap="outerHTML">
+  return () => <div hx-target="this" hx-swap="outerHTML" hx-get="/week" hx-trigger="newUser from:body">
       <style>{`
         table {
           box-shadow: var(--box-shadow) var(--color-shadow);
+        }
+        table th {
+          position: relative;
+          z-index: 0;
+          padding: 7px;
         }
         table td {
           min-width: 11px;
           min-height: 11px;
           position: relative;
           z-index: 0;
+          padding: 7px;
           /* border: 1px solid var(--color-shadow); */
-        }
-        table td:nth-child(${WORKING_HOURS.length}n+1) {
-          border-right: 1px solid var(--color-text-secondary);
-        }
-        table th:nth-child(${WORKING_HOURS.length}n+1) {
-          border-right: 1px solid var(--color-text-secondary);
-        }
-        table th {
-          position: relative;
-          z-index: 0;
         }
         td.none + td.office, td.none + td.wfh {
           border-top-left-radius: 10px;
@@ -74,48 +82,41 @@ export const renderWeekView = async () => {
           z-index: 1;
           background-color: var(--color-bg);
         }
+        div.grid-container {
+          display: grid;
+          grid-template-columns: fit-content(50%) fit-content(50%);
+          gap: 20px;
+        }
     `}</style>
-      <table>
-        <thead>
-          <tr>
-            <th>Név</th>
-            <th colspan={15}>Hétfő</th>
-            <th colspan={15}>Kedd</th>
-            <th colspan={15}>Szerda</th>
-            <th colspan={15}>Csütörtök</th>
-            <th colspan={15}>Péntek</th>
-          </tr>
-          <tr><th></th>{WORKING_DAYS.map(_ => WORKING_HOURS.map(h => <th>{h}</th>))}</tr>
-        </thead>
-        <tbody id="week-table" hx-get="/week-rows" hx-trigger="newUser from:body">
-          <TableRows/>
-        </tbody>
-      </table>
+    <div class="grid-container">
+      {WORKING_DAYS.map(d =>
+        <table>
+          <thead>
+            <tr>
+              <th/>
+              <th colspan={15}>{DAY_NAMES[d]}</th>
+            </tr>
+            <tr><th></th>{WORKING_HOURS.map(h => <th>{h}</th>)}</tr>
+          </thead>
+          <tbody>
+            <DayTableRows users={users.map(u => u.username)} workingHours={workingHours} dayNo={d} />
+          </tbody>
+        </table>
+      )}
+      </div>
       <button hx-get="/editor">Edit</button>
     </div>;
 }
 
-export const renderWeekTableRows = async () => {
-    const users = await db.selectFrom('user')
-      .select(['username'])
-      .execute();
-
-    const workingHours = await createWorkingHours(users.map(u => u.username));
-
-    return () => <>{
-      users.map((user) => (
-        <tr>
-          <td>{user.username}</td>
-          {WORKING_DAYS.map(day => {
-            return WORKING_HOURS.map(hour => {
-              const hourType = workingHours?.[user.username]?.[day]?.get(hour) ?? 'none';
+const DayTableRows = ({ users, workingHours, dayNo }: { users: string[], workingHours: WorkingHours, dayNo: number }) => <>{
+  users.map(user => <tr>
+          <td>{user}</td>
+          {WORKING_HOURS.map(hour => {
+              const hourType = workingHours?.[user]?.[dayNo]?.get(hour) ?? 'none';
               return <td class={hourType}>{hourType && hourType in HourTypeMap ? HourTypeMap[hourType] : ''}</td>;
-            })
           })}
-        </tr>
-      ))
-    }</>;
-}
+  </tr>)
+}</>;
 
 const createWorkingHours = async (users: string[]): Promise<WorkingHours> => {
   const startOfWeek = DateTime.now().startOf('week').toISODate();

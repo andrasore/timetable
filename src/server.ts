@@ -4,9 +4,9 @@ import FastifyStatic from '@fastify/static';
 import FastifyCookie from '@fastify/cookie';
 import FastifyFormbody from '@fastify/formbody';
 import { htmlReply } from './htmlReply.ts';
-import { routes as indexRoutes } from './index/routes.ts';
-import { routes as userRoutes } from './users/routes.ts';
-import { routes as reservationRoutes } from './reservations/routes.ts';
+import { routes as indexRoutes } from './index/routes.tsx';
+import { routes as userRoutes } from './users/routes.tsx';
+import { routes as reservationRoutes } from './reservations/routes.tsx';
 import { ErrorPage } from './ErrorPage.tsx';
 
 export async function bootstrap(port = 3000) {
