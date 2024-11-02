@@ -32,12 +32,10 @@ const NotLoggedInForm = () => (
   </form>
 );
 
-
 export const renderLoginForm = async (username?: string) => {
   if (username) {
     return () => <LoggedInForm username={username} />;
-  }
-  else {
+  } else {
     return () => <NotLoggedInForm />;
   }
-}
+};

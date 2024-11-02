@@ -9,9 +9,11 @@ export async function htmlReply(fastify: FastifyInstance) {
     return this;
   });
 
-  fastify.decorateReply('htmlRoot', function (this: FastifyReply, element: VNode) {
-    this.header('Content-Type', 'text/html; charset=utf-8');
-    this.send(`<!doctype html>
+  fastify.decorateReply(
+    'htmlRoot',
+    function (this: FastifyReply, element: VNode) {
+      this.header('Content-Type', 'text/html; charset=utf-8');
+      this.send(`<!doctype html>
       <html lang="en-US">
           <head>
               <meta charset="utf-8" />
@@ -31,8 +33,9 @@ export async function htmlReply(fastify: FastifyInstance) {
           </body>
       </html>`);
 
-    return this;
-  });
+      return this;
+    },
+  );
 }
 
 // skip-override is requried to pass plugin context to parent fastify instance

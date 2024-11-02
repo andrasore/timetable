@@ -15,7 +15,10 @@ export async function bootstrap(port = 3000) {
   });
 
   const assetPath = path.join(import.meta.dirname, '../assets');
-  await app.register(FastifyStatic, {root: assetPath,});
+  await app.register(FastifyStatic, { root: assetPath });
+  const iconsPath = path.join(import.meta.dirname, '../node_modules/ionicons/dist/svg');
+  await app.register(FastifyStatic, { root: iconsPath, prefix: '/icons/', decorateReply: false });
+
   await app.register(FastifyCookie);
   await app.register(FastifyFormbody);
 
@@ -23,15 +26,17 @@ export async function bootstrap(port = 3000) {
 
   app.setErrorHandler(function (error, request, reply) {
     if (error instanceof Error) {
-      this.log.error(error)
-      reply.status(500).html(ErrorPage({
-        statusCode: 500,
-        message: error.message,
-        stack: error.stack
-      }))
+      this.log.error(error);
+      reply.status(500).html(
+        ErrorPage({
+          statusCode: 500,
+          message: error.message,
+          stack: error.stack,
+        }),
+      );
     } else {
       // fastify will use parent error handler to handle this
-      reply.send(error)
+      reply.send(error);
     }
   });
 
@@ -45,5 +50,4 @@ export async function bootstrap(port = 3000) {
   });
 }
 
-bootstrap()
-  .catch((err) => console.log(err));
+bootstrap().catch((err) => console.log(err));

@@ -20,16 +20,18 @@ export async function routes(fastify: FastifyInstance) {
 
     if (!user) {
       const LoginForm = await renderLoginForm();
-      return reply.html(<>
-        <LoginForm/>
-        <ErrorToast message="😤 Nincs ilyen felhasználó!"/>
-      </>);
+      return reply.html(
+        <>
+          <LoginForm />
+          <ErrorToast message="😤 Nincs ilyen felhasználó!" />
+        </>,
+      );
     }
 
     reply.setCookie('username', username);
 
     const LoginForm = await renderLoginForm(username);
-    return reply.html(<LoginForm/>);
+    return reply.html(<LoginForm />);
   });
 
   fastify.post('/register', async function (request, reply) {
@@ -46,19 +48,21 @@ export async function routes(fastify: FastifyInstance) {
       reply.setCookie('username', username);
       const LoginForm = await renderLoginForm(username);
       reply.header('HX-Trigger', 'newUser');
-      return reply.html(<LoginForm/>);
+      return reply.html(<LoginForm />);
     }
 
     const LoginForm = await renderLoginForm();
-    return reply.html(<>
-      <LoginForm/>
-      <ErrorToast message="😤 Már létezik ilyen felhasználó!" />
-    </>);
+    return reply.html(
+      <>
+        <LoginForm />
+        <ErrorToast message="😤 Már létezik ilyen felhasználó!" />
+      </>,
+    );
   });
 
   fastify.get('/logout', async function (request, reply) {
     reply.clearCookie('username');
     const LoginForm = await renderLoginForm();
-    return reply.html(<LoginForm/>);
+    return reply.html(<LoginForm />);
   });
 }
