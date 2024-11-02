@@ -16,14 +16,6 @@ const HourTypeMap = {
   none: '',
 } as const;
 
-const DAY_NAMES = {
-  1: 'Hétfő',
-  2: 'Kedd',
-  3: 'Szerda',
-  4: 'Csütörtök',
-  5: 'Péntek',
-} as const;
-
 export const renderWeekView = async () => {
   const users = await db.selectFrom('user').select(['username']).execute();
 
@@ -95,7 +87,14 @@ export const renderWeekView = async () => {
             <thead>
               <tr>
                 <th />
-                <th colspan={15}>{DAY_NAMES[d]}</th>
+                <th colspan={15}>{
+                /* TODO add config for locale */
+                DateTime.now()
+                  .startOf('week')
+                  .plus({ days: d })
+                  .setLocale('hu')
+                  .toFormat('cccc (LLL d)')
+                }</th>
               </tr>
               <tr>
                 <th></th>

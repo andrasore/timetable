@@ -9,7 +9,8 @@ export async function routes(fastify: FastifyInstance) {
   });
 
   fastify.get('/editor', async function (request, reply) {
-    const WeekEditor = await renderWeekEditor();
+    const username = request.cookies['username'];
+    const WeekEditor = await renderWeekEditor(username!);
     return reply.html(<WeekEditor />);
   });
 }
