@@ -2,25 +2,15 @@ import { DateTime } from 'luxon';
 import db from '../db/db.ts';
 import { readIcon } from '../util/icons.ts';
 
-const WORKING_DAYS = [1, 2, 3, 4, 5] as const;
+const WORKING_DAYS = [0, 1, 2, 3, 4] as const;
 const WORKING_HOURS = [
   6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
 ] as const;
-
-type HourType = 'office' | 'wfh';
 
 const HourTypeMap = {
   office: 'i',
   wfh: 'x',
   none: '',
-} as const;
-
-const DAY_NAMES = {
-  1: 'Hétfő',
-  2: 'Kedd',
-  3: 'Szerda',
-  4: 'Csütörtök',
-  5: 'Péntek',
 } as const;
 
 export const renderWeekEditor = async (username: string) => {
@@ -117,14 +107,13 @@ export const renderWeekEditor = async (username: string) => {
           {WORKING_DAYS.map((day) => {
             const currentDay = DateTime.now()
               .startOf('week')
-              .plus({ days: day })
-              .toISODate();
+              .plus({ days: day });
             // Rendering working hours as larger bricks instead of individual
             // squares
             const result = [];
             for (let i = 0; i < WORKING_HOURS.length; i++) {
               const reservation = reservations?.find(
-                (f) => f.fromHour == WORKING_HOURS[i] && f.date == currentDay,
+                (f) => f.fromHour == WORKING_HOURS[i] && f.date == currentDay.toISODate(),
               );
               if (reservation) {
                 // We do a little hacking...
@@ -149,7 +138,7 @@ export const renderWeekEditor = async (username: string) => {
             }
             return (
               <tr>
-                <td>{DAY_NAMES[day]}</td>
+                <td>{currentDay.setLocale('hu').toFormat('cccc')}</td>
                 {result}
               </tr>
             );

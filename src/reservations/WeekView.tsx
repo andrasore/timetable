@@ -1,11 +1,7 @@
 import { DateTime } from 'luxon';
 import db from '../db/db.ts';
 
-type HourType = 'office' | 'wfh';
-type WorkdayData = Map<number, HourType>;
-type WorkingHours = Record<string, Record<number, WorkdayData>>;
-
-const WORKING_DAYS = [1, 2, 3, 4, 5] as const;
+const WORKING_DAYS = [0, 1, 2, 3, 4] as const;
 const WORKING_HOURS = [
   6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
 ] as const;
@@ -20,14 +16,7 @@ export const renderWeekView = async () => {
   const users = await db.selectFrom('user').select(['username']).execute();
 
   const weekNo = DateTime.now().setLocale('hu').weekNumber;
-  const workingHours = await queryWorkingHours(users.map((u) => u.username));
-
-  /* NOTE:
-    Sticky table columns require:
-    - relative poisitioning of td/th elems
-    - sticky position for sticky column
-    - larger z index for sticky column
-    */
+  const reservations = await queryReservations();
 
   return () => (
     <div
@@ -48,21 +37,13 @@ export const renderWeekView = async () => {
           min-height: 11px;
           padding: 7px;
         }
-        td.none + td.office, td.none + td.wfh {
-          border-top-left-radius: 10px;
-          border-bottom-left-radius: 10px;
-        }
-        td.office:has(+ td.none), td.wfh:has(+ td.none) {
-          border-top-right-radius: 10px;
-          border-bottom-right-radius: 10px;
-        }
         table td.office {
           background-color: #048A81;
-          border-style: none;
+          border-radius: 10px;
         }
         table td.wfh {
           background-color: #FDE2FF;
-          border-style: none;
+          border-radius: 10px;
         }
         table th:first-child {
           background-color: var(--color-table);
@@ -108,7 +89,7 @@ export const renderWeekView = async () => {
             <tbody>
               <DayTableRows
                 users={users.map((u) => u.username)}
-                workingHours={workingHours}
+                reservations={reservations}
                 dayNo={d}
               />
             </tbody>
@@ -121,35 +102,54 @@ export const renderWeekView = async () => {
 
 const DayTableRows = ({
   users,
-  workingHours,
+  reservations,
   dayNo,
 }: {
   users: string[];
-  workingHours: WorkingHours;
+  reservations: Awaited<ReturnType<typeof queryReservations>>;
   dayNo: number;
 }) => (
   <>
-    {users.map((user) => (
-      <tr>
-        <td>{user}</td>
-        {WORKING_HOURS.map((hour) => {
-          const hourType = workingHours?.[user]?.[dayNo]?.get(hour) ?? 'none';
-          return (
-            <td class={hourType}>
-              {hourType && hourType in HourTypeMap ? HourTypeMap[hourType] : ''}
-            </td>
+    {users.map((user) => {
+      const rows = [];
+      const date = DateTime.now().startOf('week').plus({ days: dayNo }).toISODate();
+
+      for (let i = 0; i < WORKING_HOURS.length; i++) {
+        const reservation = reservations?.[user]?.find(
+          (f) => f.fromHour == WORKING_HOURS[i] && f.date == date,
+        );
+        if (reservation) {
+          // We do a little hacking...
+          // When a reservation is found we must not iterate the hours it
+          // spans
+          const reservationLength =
+            reservation.toHour - reservation.fromHour + 1;
+          i += reservationLength - 1;
+          rows.push(
+            <td colspan={reservationLength} class={reservation.type}>
+              {HourTypeMap[reservation.type]}
+            </td>,
           );
-        })}
-      </tr>
-    ))}
+        } else {
+          rows.push(<td />);
+        }
+      }
+
+      return (
+        <tr>
+          <td>{user}</td>
+          {rows}
+        </tr>
+      );
+    })}
   </>
 );
 
-const queryWorkingHours = async (users: string[]): Promise<WorkingHours> => {
+const queryReservations = async () => {
   const startOfWeek = DateTime.now().startOf('week').toISODate();
   const endOfWeek = DateTime.now().endOf('week').toISODate();
 
-  const reservations = await db
+  const result = await db
     .selectFrom('reservation')
     .innerJoin('user', 'user_id', 'user.id')
     .select([
@@ -167,19 +167,5 @@ const queryWorkingHours = async (users: string[]): Promise<WorkingHours> => {
     )
     .execute();
 
-  const workingHours = Object.fromEntries(
-    users.map((user) => [
-      user,
-      Object.fromEntries(WORKING_DAYS.map((i) => [i, new Map()])),
-    ]),
-  );
-
-  for (const reservation of reservations) {
-    const weekday = DateTime.fromISO(reservation.date).weekday;
-    for (let h = reservation.fromHour; h <= reservation.toHour; h++) {
-      workingHours[reservation.username][weekday].set(h, reservation.type);
-    }
-  }
-
-  return workingHours;
+  return Object.groupBy(result, (res) => res.username);
 };
