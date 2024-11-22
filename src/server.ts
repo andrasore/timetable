@@ -16,8 +16,15 @@ export async function bootstrap(port = 3000) {
 
   const assetPath = path.join(import.meta.dirname, '../assets');
   await app.register(FastifyStatic, { root: assetPath });
-  const iconsPath = path.join(import.meta.dirname, '../node_modules/ionicons/dist/svg');
-  await app.register(FastifyStatic, { root: iconsPath, prefix: '/icons/', decorateReply: false });
+  const iconsPath = path.join(
+    import.meta.dirname,
+    '../node_modules/ionicons/dist/svg',
+  );
+  await app.register(FastifyStatic, {
+    root: iconsPath,
+    prefix: '/icons/',
+    decorateReply: false,
+  });
 
   await app.register(FastifyCookie);
   await app.register(FastifyFormbody);

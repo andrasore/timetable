@@ -4,8 +4,6 @@ import db from '../db/db.ts';
 import { renderLoginForm } from './LoginForm.tsx';
 import { ErrorToast } from '../util/ErrorToast.tsx';
 
-const LoginReqSchema = z.object({ username: z.string().min(1) });
-
 // TODO verify if username stored in cookie actually exists
 
 export async function routes(fastify: FastifyInstance) {
@@ -33,6 +31,8 @@ export async function routes(fastify: FastifyInstance) {
     const LoginForm = await renderLoginForm(username);
     return reply.html(<LoginForm />);
   });
+
+  const LoginReqSchema = z.object({ username: z.string().min(1) });
 
   fastify.post('/register', async function (request, reply) {
     const { username } = LoginReqSchema.parse(request.body);

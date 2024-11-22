@@ -1,7 +1,6 @@
 import { DateTime } from 'luxon';
 import db from '../db/db.ts';
 import { readIcon } from '../util/icons.ts';
-import type { Reservation } from './types.ts';
 
 const WORKING_DAYS = [1, 2, 3, 4, 5] as const;
 const WORKING_HOURS = [
@@ -32,7 +31,42 @@ export const renderWeekEditor = async (username: string) => {
   const businessIcon = await readIcon('business-outline');
 
   return () => (
-    <div hx-target="this" hx-swap="outerHTML" style="display: flex; flex-direction: column; gap: 1em;">
+    <div
+      hx-target="this"
+      hx-swap="outerHTML"
+      style="display: flex; flex-direction: column; gap: 1em;"
+      x-data="{
+          intervalStart: null,
+          hourType: 'office',
+
+          async handleClick(day, hour) {
+            if (this.intervalStart === null) {
+              this.intervalStart = { day, hour };
+            } else if (
+              this.intervalStart.day === day &&
+              this.intervalStart.hour < hour
+            ) {
+              // insertion is valid
+              const body = JSON.stringify({
+                start: this.intervalStart,
+                end: { day, hour },
+                hourType: this.hourType,
+              });
+              await fetch('/reservation', {
+                method: 'POST',
+                body,
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+              });
+            } else {
+              // insertion is not valid
+              this.intervalStart = null;
+            }
+          },
+
+        }"
+    >
       <div style="display: flex; flex-direction: row; justify-content: space-between;">
         <h1>{weekNo}. hét</h1>
         <button hx-get="/week">Back</button>
@@ -61,13 +95,16 @@ export const renderWeekEditor = async (username: string) => {
               opacity: 1.0;
               color: var(--color-secondary);
            }
+           table td.office {
+             background-color: #048A81;
+             border-radius: 10px;
+           }
+           table td.wfh {
+             background-color: #FDE2FF;
+             border-radius: 10px;
+           }
         `}</style>
-      <table style="display: table;" x-data="{
-        inserting: false,
-        handleClick (day, hour) {
-          console.log(day, hour);
-        },
-        }">
+      <table style="display: table;">
         <thead>
           <tr>
             <th></th>
@@ -77,40 +114,72 @@ export const renderWeekEditor = async (username: string) => {
           </tr>
         </thead>
         <tbody>
-          {WORKING_DAYS.map(day => {
-            const currentDay = DateTime.now().startOf('week').plus({ days: day }).toISODate();
+          {WORKING_DAYS.map((day) => {
+            const currentDay = DateTime.now()
+              .startOf('week')
+              .plus({ days: day })
+              .toISODate();
             // Rendering working hours as larger bricks instead of individual
             // squares
             const result = [];
             for (let i = 0; i < WORKING_HOURS.length; i++) {
-              const reservation = reservations?.find((f) => f.fromHour == WORKING_HOURS[i] && f.date == currentDay);
+              const reservation = reservations?.find(
+                (f) => f.fromHour == WORKING_HOURS[i] && f.date == currentDay,
+              );
               if (reservation) {
                 // We do a little hacking...
                 // When a reservation is found we must not iterate the hours it
                 // spans
-                const reservationLength = reservation.toHour - reservation.fromHour + 1;
+                const reservationLength =
+                  reservation.toHour - reservation.fromHour + 1;
                 i += reservationLength - 1;
-                result.push(<td colspan={reservationLength} class={reservation.type}>{HourTypeMap[reservation.type]}</td>);
-              }
-              else {
-                result.push(<td/>);
+                result.push(
+                  <td colspan={reservationLength} class={reservation.type}>
+                    {HourTypeMap[reservation.type]}
+                  </td>,
+                );
+              } else {
+                result.push(
+                  <td
+                    dangerouslySetInnerHTML={{ __html: addCircleIcon }}
+                    x-on:click={`handleClick(${day},${WORKING_HOURS[i]})`}
+                  />,
+                );
               }
             }
-            return <tr>
-              <td>{DAY_NAMES[day]}</td>
-              {result}
-            </tr>;
+            return (
+              <tr>
+                <td>{DAY_NAMES[day]}</td>
+                {result}
+              </tr>
+            );
           })}
         </tbody>
       </table>
       <form style="display: flex; gap: 1em; max-width: unset; min-width: unset;">
         <span>
-          <input type="radio" id="radioButtonOffice" name="hourType" value="office" checked/>
-          <label for="radioButtonOffice"><div dangerouslySetInnerHTML={{ __html: businessIcon }}/>Office</label>
+          <input
+            type="radio"
+            id="radioButtonOffice"
+            value="office"
+            x-model="hourType"
+          />
+          <label for="radioButtonOffice">
+            <div dangerouslySetInnerHTML={{ __html: businessIcon }} />
+            Office
+          </label>
         </span>
         <span>
-          <input type="radio" id="radioButtonHome" name="hourType" value="wfh"/>
-          <label for="radioButtonHome"><div dangerouslySetInnerHTML={{ __html: homeIcon }}/>Home</label>
+          <input
+            type="radio"
+            id="radioButtonHome"
+            value="wfh"
+            x-model="hourType"
+          />
+          <label for="radioButtonHome">
+            <div dangerouslySetInnerHTML={{ __html: homeIcon }} />
+            Home
+          </label>
         </span>
       </form>
     </div>

@@ -87,14 +87,16 @@ export const renderWeekView = async () => {
             <thead>
               <tr>
                 <th />
-                <th colspan={15}>{
-                /* TODO add config for locale */
-                DateTime.now()
-                  .startOf('week')
-                  .plus({ days: d })
-                  .setLocale('hu')
-                  .toFormat('cccc (LLL d)')
-                }</th>
+                <th colspan={15}>
+                  {
+                    /* TODO add config for locale */
+                    DateTime.now()
+                      .startOf('week')
+                      .plus({ days: d })
+                      .setLocale('hu')
+                      .toFormat('cccc (LLL d)')
+                  }
+                </th>
               </tr>
               <tr>
                 <th></th>
