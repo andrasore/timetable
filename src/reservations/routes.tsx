@@ -47,6 +47,6 @@ export async function routes(fastify: FastifyInstance) {
       })
       .execute();
 
-    await reply.status(200).send();
+    reply.header('HX-Trigger', 'newReservation');
   });
 }
