@@ -18,8 +18,9 @@ export async function routes(fastify: FastifyInstance) {
   });
 
   const ReservationReqSchema = z.object({
-    start: z.object({ day: z.number(), hour: z.number() }),
-    end: z.object({ day: z.number(), hour: z.number() }),
+    startHour: z.coerce.number(),
+    endHour: z.coerce.number(),
+    day: z.coerce.number(),
     hourType: z.union([z.literal('office'), z.literal('wfh')]),
   });
 
@@ -36,13 +37,13 @@ export async function routes(fastify: FastifyInstance) {
       .insertInto('reservation')
       .values({
         user_id: userId,
-        from_hour: body.start.hour,
-        to_hour: body.end.hour,
+        from_hour: body.startHour,
+        to_hour: body.endHour,
         type: body.hourType,
         // TODO allow insert for other weeks as well
         date: DateTime.now()
           .startOf('week')
-          .plus({ days: body.start.day })
+          .plus({ days: body.day })
           .toISODate(),
       })
       .execute();

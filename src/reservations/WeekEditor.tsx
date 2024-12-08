@@ -24,6 +24,8 @@ export const renderWeekEditor = async (username: string) => {
     <div
       hx-target="this"
       hx-swap="outerHTML"
+      hx-get="/editor"
+      hx-trigger="newReservation from:body"
       style="display: flex; flex-direction: column; gap: 1em;"
       x-data="{
           intervalStart: null,
@@ -37,17 +39,14 @@ export const renderWeekEditor = async (username: string) => {
               this.intervalStart.hour < hour
             ) {
               // insertion is valid
-              const body = JSON.stringify({
-                start: this.intervalStart,
-                end: { day, hour },
+              const values = {
+                day: day,
+                startHour: this.intervalStart.hour,
+                endHour: hour,
                 hourType: this.hourType,
-              });
-              await fetch('/reservation', {
-                method: 'POST',
-                body,
-                headers: {
-                  'Content-Type': 'application/json',
-                },
+              };
+              await htmx.ajax('POST', '/reservation', {
+                values,
               });
             } else {
               // insertion is not valid
