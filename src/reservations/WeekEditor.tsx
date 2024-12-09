@@ -55,7 +55,6 @@ export const renderWeekEditor = async (username: string) => {
               this.intervalStart = null;
             }
           },
-
         }"
     >
       <div style="display: flex; flex-direction: row; justify-content: space-between;">
@@ -194,7 +193,7 @@ const queryReservations = async (username: string) => {
     ])
     .where((eb) =>
       eb.and([
-        eb('reservation.date', '>', startOfWeek),
+        eb('reservation.date', '>=', startOfWeek),
         eb('reservation.date', '<=', endOfWeek),
         eb('user.username', '=', username),
       ]),

@@ -161,7 +161,7 @@ const queryReservations = async () => {
     ])
     .where((eb) =>
       eb.and([
-        eb('reservation.date', '>', startOfWeek),
+        eb('reservation.date', '>=', startOfWeek),
         eb('reservation.date', '<=', endOfWeek),
       ]),
     )
