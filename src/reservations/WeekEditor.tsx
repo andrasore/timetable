@@ -95,6 +95,12 @@ export const renderWeekEditor = async (username: string) => {
              background-color: #FDE2FF;
              border-radius: 10px;
            }
+           table td:has(~ td:hover):has(:not(~ td:selected)) {
+             background-color: #00FF00;
+           }
+           table td.selected {
+             background-color: #0000FF;
+           }
         `}</style>
       <table style="display: table;">
         <thead>
@@ -134,6 +140,7 @@ export const renderWeekEditor = async (username: string) => {
                   <td
                     dangerouslySetInnerHTML={{ __html: addCircleIcon }}
                     x-on:click={`handleClick(${day},${WORKING_HOURS[i]})`}
+                    x-bind:class={`intervalStart?.day == ${day} && intervalStart?.hour == ${WORKING_HOURS[i]} && 'selected'`}
                   />,
                 );
               }
