@@ -45,8 +45,10 @@ export const renderWeekEditor = async (username: string) => {
                 endHour: hour,
                 hourType: this.hourType,
               };
+              // TODO maybe swap in post response instead of custom event
               await htmx.ajax('POST', '/reservation', {
                 values,
+                swap: 'none',
               });
             } else {
               // insertion is not valid
@@ -79,6 +81,8 @@ export const renderWeekEditor = async (username: string) => {
            }
            td svg path {
               opacity: 0.0;
+              transition: opacity 1s
+              color: var(--color-secondary);
            }
            td:hover svg path {
               opacity: 1.0;
