@@ -95,11 +95,14 @@ export const renderWeekEditor = async (username: string) => {
              background-color: #FDE2FF;
              border-radius: 10px;
            }
-           table td:has(~ td:hover):has(:not(~ td:selected)) {
+           table td.selected ~ td:has(~ td:hover) {
+             background-color: #00FF00;
+           }
+           table td.selected ~ td:hover {
              background-color: #00FF00;
            }
            table td.selected {
-             background-color: #0000FF;
+             background-color: #00FF00;
            }
         `}</style>
       <table style="display: table;">
