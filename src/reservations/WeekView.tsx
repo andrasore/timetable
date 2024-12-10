@@ -112,7 +112,10 @@ const DayTableRows = ({
   <>
     {users.map((user) => {
       const rows = [];
-      const date = DateTime.now().startOf('week').plus({ days: dayNo }).toISODate();
+      const date = DateTime.now()
+        .startOf('week')
+        .plus({ days: dayNo })
+        .toISODate();
 
       for (let i = 0; i < WORKING_HOURS.length; i++) {
         const reservation = reservations?.[user]?.find(

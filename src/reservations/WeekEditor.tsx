@@ -25,7 +25,7 @@ export const renderWeekEditor = async (username: string) => {
       hx-target="this"
       hx-swap="outerHTML"
       hx-get="/editor"
-      hx-trigger="newReservation from:body"
+      hx-trigger="newReservation deleteReservation from:body"
       style="display: flex; flex-direction: column; gap: 1em;"
       x-data="{
           intervalStart: null,
@@ -41,8 +41,8 @@ export const renderWeekEditor = async (username: string) => {
               // insertion is valid
               const values = {
                 day: day,
-                startHour: this.intervalStart.hour,
-                endHour: hour,
+                fromHour: this.intervalStart.hour,
+                toHour: hour,
                 hourType: this.hourType,
               };
               // TODO maybe swap in post response instead of custom event
@@ -124,7 +124,9 @@ export const renderWeekEditor = async (username: string) => {
             const result = [];
             for (let i = 0; i < WORKING_HOURS.length; i++) {
               const reservation = reservations?.find(
-                (f) => f.fromHour == WORKING_HOURS[i] && f.date == currentDay.toISODate(),
+                (f) =>
+                  f.fromHour == WORKING_HOURS[i] &&
+                  f.date == currentDay.toISODate(),
               );
               if (reservation) {
                 // We do a little hacking...
@@ -134,7 +136,14 @@ export const renderWeekEditor = async (username: string) => {
                   reservation.toHour - reservation.fromHour + 1;
                 i += reservationLength - 1;
                 result.push(
-                  <td colspan={reservationLength} class={reservation.type}>
+                  <td
+                    colspan={reservationLength}
+                    class={reservation.type}
+                    hx-target="this"
+                    hx-post="/delete-reservation"
+                    hx-swap="outerHTML"
+                    hx-vals={`{"fromHour":${reservation.fromHour},"toHour":${reservation.toHour},"day":${day}}`}
+                        >
                     {HourTypeMap[reservation.type]}
                   </td>,
                 );
