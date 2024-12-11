@@ -26,31 +26,6 @@ export const renderWeekView = async () => {
       hx-trigger="newUser from:body"
     >
       <style>{`
-        table {
-          box-shadow: var(--box-shadow) var(--color-shadow);
-        }
-        table th {
-          padding: 7px;
-        }
-        table td {
-          min-width: 11px;
-          min-height: 11px;
-          padding: 7px;
-        }
-        table td.office {
-          background-color: #048A81;
-          border-radius: 10px;
-        }
-        table td.wfh {
-          background-color: #FDE2FF;
-          border-radius: 10px;
-        }
-        table th:first-child {
-          background-color: var(--color-table);
-        }
-        table td:first-child {
-          background-color: var(--color-bg);
-        }
         div.grid-container {
           display: grid;
           grid-template-columns: fit-content(50%) fit-content(50%);
