@@ -1,0 +1,83 @@
+@layer reset, base, custom;
+
+@import url('https://fonts.googleapis.com/css2?family=Playwrite+HU:wght@100..400&family=Rouge+Script&display=swap') layer(base);
+
+@import url(open-color.css) layer(base);
+
+@layer reset {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  input, button, textarea, select {
+    font: inherit;
+  }
+
+  body {
+    margin: 0;
+  }
+}
+
+@layer base {
+  :root {
+    --fg: light-dark(var(--oc-gray-9), var(--oc-gray-0));
+    --bg: light-dark(var(--oc-gray-0), var(--oc-gray-9));
+  }
+
+  body {
+      color: var(--fg);
+      background-color: var(--bg);
+  }
+
+  header {
+      display: flex;
+      flex-direction: horizontal;
+      justify-content: space-between;
+      padding: 0 2rem 0 2rem;
+      color: var(--fg);
+      background-color: light-dark(var(--oc-cyan-4), var(--oc-cyan-9));
+      border-bottom: solid 1px var(--oc-cyan-6);
+      box-shadow: 0.2rem 0.2rem 0.2rem var(--oc-gray-4);
+  }
+
+  main {
+      color: light-dark(var(--oc-cyan-9), var(--oc-gray-0));
+      @media only screen and (min-width: 768px) {
+        margin: 0 5vw;
+      }
+  }
+
+  table {
+    box-shadow: var(--box-shadow) var(--color-shadow);
+  }
+  table th {
+    padding: 7px;
+  }
+  table td {
+    min-width: 11px;
+    min-height: 11px;
+    padding: 7px;
+  }
+  table td.office {
+    background-color: #048A81;
+    border-radius: 10px;
+  }
+  table td.wfh {
+    background-color: #FDE2FF;
+    border-radius: 10px;
+  }
+  table th:first-child {
+    background-color: var(--color-table);
+  }
+  table td:first-child {
+    background-color: var(--color-bg);
+  }
+}
+
+@layer custom {
+  .nav-title {
+    font-family: "Playwrite HU";
+    color: var(--oc-gray-0);
+    text-shadow: 1px 1px var(--oc-cyan-9);
+  }
+}

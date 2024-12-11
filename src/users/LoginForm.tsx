@@ -9,9 +9,9 @@ const LoggedInForm = ({ username }: { username: string }) => (
   <form hx-target="this" hx-swap="outerHTML" style={HorizontalFlex}>
     <i>Logged in as: </i>
     <b>{username}</b>
-    <a hx-get="/logout">
+    <button hx-get="/logout">
       <i>Logout</i>
-    </a>
+    </button>
   </form>
 );
 
@@ -23,12 +23,12 @@ const NotLoggedInForm = () => (
       placeholder="Username"
       style="margin-bottom: 8px; margin-top: 8px"
     />
-    <a hx-post="/login">
+    <button hx-post="/login">
       <b>Login</b>
-    </a>
-    <a hx-post="/register">
+    </button>
+    <button hx-post="/register">
       <i>Register</i>
-    </a>
+    </button>
   </form>
 );
 

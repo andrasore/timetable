@@ -18,9 +18,10 @@ export async function htmlReply(fastify: FastifyInstance) {
           <head>
               <meta charset="utf-8" />
               <meta name="viewport" content="width=device-width, initial-scale=1">
+              <meta name="color-scheme" content="light dark">
               <link rel="icon" href="/favicon.svg">
 
-              <link rel="stylesheet" href="https://unpkg.com/mvp.css">
+              <link rel="stylesheet" href="/style.css">
 
               <script defer src="https://unpkg.com/htmx.org@2.0.0"></script>
 

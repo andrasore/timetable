@@ -26,19 +26,10 @@ export const renderIndex = async (request: FastifyRequest) => {
   return () => (
     <>
       <header>
-        <nav
-          role="navigation"
-          aria-label="main navigation"
-          style="margin-bottom: 0px"
-        >
-          <div style={CenteredHorizontalFlex}>
-            <a href="/" style={HomeButtonStyle} />
-            <h1>Munkaidő</h1>
-          </div>
-          <ul>
-            <LoginForm />
-          </ul>
-        </nav>
+        <div style={CenteredHorizontalFlex}>
+          <h1 class="nav-title">Munkaidő</h1>
+        </div>
+        <LoginForm />
       </header>
       <main>
         <WeekView />

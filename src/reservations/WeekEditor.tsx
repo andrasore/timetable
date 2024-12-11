@@ -166,6 +166,7 @@ export const renderWeekEditor = async (username: string) => {
           })}
         </tbody>
       </table>
+      {/* FIXME bug where form is reset after creating a reservation */}
       <form style="display: flex; gap: 1em; max-width: unset; min-width: unset;">
         <span>
           <input
