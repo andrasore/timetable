@@ -24,6 +24,7 @@ export const renderWeekView = async () => {
       hx-swap="outerHTML"
       hx-get="/week"
       hx-trigger="newUser from:body"
+      class="week-view--container"
     >
       <style>{`
         div.grid-container {

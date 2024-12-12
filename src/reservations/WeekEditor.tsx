@@ -26,7 +26,7 @@ export const renderWeekEditor = async (username: string) => {
       hx-swap="outerHTML"
       hx-get="/editor"
       hx-trigger="newReservation deleteReservation from:body"
-      style="display: flex; flex-direction: column; gap: 1em;"
+      class="week-editor--container"
       x-data="{
           intervalStart: null,
           hourType: 'office',

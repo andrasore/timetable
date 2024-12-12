@@ -27,7 +27,7 @@ export const renderIndex = async (request: FastifyRequest) => {
     <>
       <header>
         <div style={CenteredHorizontalFlex}>
-          <h1 class="nav-title">Munkaidő</h1>
+          <h1 class="nav--title">Munkaidő</h1>
         </div>
         <LoginForm />
       </header>
