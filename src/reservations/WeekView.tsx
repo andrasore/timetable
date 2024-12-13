@@ -26,19 +26,11 @@ export const renderWeekView = async () => {
       hx-trigger="newUser from:body"
       class="week-view--container"
     >
-      <style>{`
-        div.grid-container {
-          display: grid;
-          grid-template-columns: fit-content(50%) fit-content(50%);
-          gap: 20px;
-          justify-content: space-between;
-        }
-    `}</style>
       <div style="display: flex; flex-direction: row; justify-content: space-between;">
         <h1>{weekNo}. hét</h1>
         <button hx-get="/editor">Edit</button>
       </div>
-      <div class="grid-container">
+      <div class="week-view--table-container">
         {WORKING_DAYS.map((d) => (
           <table>
             <thead>

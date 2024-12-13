@@ -1,7 +1,6 @@
 @layer reset, base, custom;
 
 @import url('https://fonts.googleapis.com/css2?family=Playwrite+HU:wght@100..400&family=Rouge+Script&display=swap') layer(base);
-
 @import url(open-color.css) layer(base);
 
 @layer reset {
@@ -39,11 +38,20 @@
     font-variant: all-small-caps;
     padding: 0.4rem 0.80rem 0.55rem 0.8rem;
     border: solid 1px var(--oc-cyan-9);
-    border-radius: 0.2rem;
+    border-radius: 3px;
     background: linear-gradient(180deg, var(--oc-cyan-4) 90%, var(--oc-cyan-6) 100%);
     min-width: 5rem;
     color: var(--oc-white);
     font-weight: bold;
+  }
+
+  button:hover {
+    background: linear-gradient(180deg, var(--oc-cyan-3) 90%, var(--oc-cyan-5) 100%);
+  }
+
+  button:active {
+    background: linear-gradient(0deg, var(--oc-cyan-3) 90%, var(--oc-cyan-5) 100%);
+    padding: 0.5rem 0.80rem 0.45rem 0.8rem;
   }
 
   header {
@@ -54,26 +62,31 @@
       color: var(--fg);
       background-color: light-dark(var(--oc-cyan-4), var(--oc-cyan-9));
       border-bottom: solid 1px var(--oc-cyan-6);
-      box-shadow: 0.2rem 0.2rem 0.2rem var(--oc-gray-4);
+      box-shadow: 0 0.2rem 0.2rem var(--oc-gray-4);
       height: 5.5rem;
   }
 
   main {
-      color: light-dark(var(--oc-cyan-9), var(--oc-gray-0));
+      color: light-dark(var(--oc-gray-9), var(--oc-gray-0));
       @media only screen and (min-width: 768px) {
-        margin: 0 5vw;
+        margin: 0 2.5vw;
       }
   }
 
   table {
-    box-shadow: 8px 8px 8px var(--oc-gray-4);
-    border: 8px solid var(--bg);
-    border-radius: 8px;
+    color: var(--bg);
+    box-shadow: 0 0.2rem 0.2rem var(--oc-gray-4);
+    background-color: var(--oc-cyan-4);
+    border-spacing: 0;
+    border: 1px solid var(--oc-cyan-5);
+    border-radius: 3px;
   }
   table th {
+    background-color: var(--oc-cyan-3);
     padding: 7px;
   }
   table td {
+    background-color: var(--bg);
     min-width: 11px;
     min-height: 11px;
     padding: 7px;
@@ -87,10 +100,11 @@
     border-radius: 10px;
   }
   table th:first-child {
-    background-color: var(--primary);
+    background-color: var(--oc-cyan-3);
+    font-weight: bold;
   }
   table td:first-child {
-    background-color: var(--primary);
+    color: var(--fg);
   }
 }
 
@@ -101,9 +115,37 @@
     text-shadow: 1px 1px var(--oc-cyan-9);
   }
 
+  .nav--login-form {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .nav--login-icon {
+    background-image: url( '/icons/person-circle-outline.svg' );
+    filter: invert() brightness(95%);
+    background-position: center;
+    background-repeat: no-repeat;
+    min-width: 2.5rem;
+    min-height: 2.5rem;
+  }
+
+  .nav--login-name {
+    color: var(--bg)
+  }
+
   .week-view--container {
     display: flex;
     flex-direction: column;
+    gap: 2em;
+    padding-top: 2em;
+    padding-bottom: 2em;
+  }
+
+  .week-view--table-container {
+    display: flex;
+    flex-wrap: wrap;
     gap: 2em;
     padding-top: 2em;
   }
@@ -113,5 +155,9 @@
     flex-direction: column;
     gap: 2em;
     padding-top: 2em;
+  }
+
+  .week-editor--table-td:hover:not(.selected) {
+    background-image: url('/icons/add-circle-outline.svg');
   }
 }

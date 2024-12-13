@@ -1,6 +1,5 @@
 import { DateTime } from 'luxon';
 import db from '../db/db.ts';
-import { readIcon } from '../util/icons.ts';
 
 const WORKING_DAYS = [0, 1, 2, 3, 4] as const;
 const WORKING_HOURS = [
@@ -16,9 +15,6 @@ const HourTypeMap = {
 export const renderWeekEditor = async (username: string) => {
   const reservations = await queryReservations(username);
   const weekNo = DateTime.now().setLocale('hu').weekNumber;
-  const addCircleIcon = await readIcon('add-circle-outline');
-  const homeIcon = await readIcon('home-outline');
-  const businessIcon = await readIcon('business-outline');
 
   return () => (
     <div
@@ -61,50 +57,6 @@ export const renderWeekEditor = async (username: string) => {
         <h1>{weekNo}. hét</h1>
         <button hx-get="/week">Back</button>
       </div>
-      <style>{`
-           table {
-              width: 100%
-           }
-           table th:first-child {
-              background-color: var(--color-table);
-           }
-           table td:first-child {
-              background-color: var(--color-bg);
-           }
-           table th:not(:first-child) {
-               min-width: 2em;
-           }
-           table td:not(:first-child) {
-               min-width: 2em;
-               cursor: pointer;
-           }
-           td svg path {
-              opacity: 0.0;
-              transition: opacity 1s
-              color: var(--color-secondary);
-           }
-           td:hover svg path {
-              opacity: 1.0;
-              color: var(--color-secondary);
-           }
-           table td.office {
-             background-color: #048A81;
-             border-radius: 10px;
-           }
-           table td.wfh {
-             background-color: #FDE2FF;
-             border-radius: 10px;
-           }
-           table td.selected ~ td:has(~ td:hover) {
-             background-color: #00FF00;
-           }
-           table td.selected ~ td:hover {
-             background-color: #00FF00;
-           }
-           table td.selected {
-             background-color: #00FF00;
-           }
-        `}</style>
       <table style="display: table;">
         <thead>
           <tr>
@@ -150,7 +102,7 @@ export const renderWeekEditor = async (username: string) => {
               } else {
                 result.push(
                   <td
-                    dangerouslySetInnerHTML={{ __html: addCircleIcon }}
+                    class="week-editor--table-td"
                     x-on:click={`handleClick(${day},${WORKING_HOURS[i]})`}
                     x-bind:class={`intervalStart?.day == ${day} && intervalStart?.hour == ${WORKING_HOURS[i]} && 'selected'`}
                   />,
@@ -176,7 +128,7 @@ export const renderWeekEditor = async (username: string) => {
             x-model="hourType"
           />
           <label for="radioButtonOffice">
-            <div dangerouslySetInnerHTML={{ __html: businessIcon }} />
+            <div style="background-image: url( '/icons/business-outline.svg' );" />
             Office
           </label>
         </span>
@@ -188,7 +140,7 @@ export const renderWeekEditor = async (username: string) => {
             x-model="hourType"
           />
           <label for="radioButtonHome">
-            <div dangerouslySetInnerHTML={{ __html: homeIcon }} />
+            <div style="background-image: url( '/icons/home-outline.svg' );" />
             Home
           </label>
         </span>
