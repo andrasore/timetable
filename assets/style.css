@@ -159,6 +159,13 @@
 }
 
 @layer app {
+  .nav--title-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+  }
+
   .nav--title {
     font-family: "Playwrite HU";
     color: var(--oc-gray-0);
@@ -200,20 +207,25 @@
     padding-top: 2em;
   }
 
-  .week-editor--container {
-    display: flex;
-    flex-direction: column;
-    gap: 2em;
-    padding-top: 2em;
-  }
-
   .week-editor--table {
+    width: 100%;
+    text-align: center;
     table-layout: fixed;
   }
 
-  .week-editor--table-td {
-    width: unset;
-    min-width: 2.5em;
+  .week-editor--title-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .week-editor--container {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 2em;
+    padding-top: 2em;
   }
 
   /* TODO use ::before w/ proper tinting */

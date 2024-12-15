@@ -47,7 +47,7 @@ export const renderWeekEditor = async (username: string) => {
           },
         }"
     >
-      <div style="display: flex; flex-direction: row; justify-content: space-between;">
+      <div class="week-editor--title-container">
         <h1>{weekNo}. hét</h1>
         <button hx-get="/week">Back</button>
       </div>
