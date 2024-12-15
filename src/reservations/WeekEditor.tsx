@@ -6,12 +6,6 @@ const WORKING_HOURS = [
   6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
 ] as const;
 
-const HourTypeMap = {
-  office: 'i',
-  wfh: 'x',
-  none: '',
-} as const;
-
 export const renderWeekEditor = async (username: string) => {
   const reservations = await queryReservations(username);
   const weekNo = DateTime.now().setLocale('hu').weekNumber;
@@ -97,7 +91,6 @@ export const renderWeekEditor = async (username: string) => {
                     hx-vals={`{"fromHour":${reservation.fromHour},"toHour":${reservation.toHour},"day":${day}}`}
                         >
                     <div class={`marker--${reservation.type}`} />
-                    {HourTypeMap[reservation.type]}
                   </td>,
                 );
               } else {
@@ -120,8 +113,8 @@ export const renderWeekEditor = async (username: string) => {
         </tbody>
       </table>
       {/* FIXME bug where form is reset after creating a reservation */}
-      <form style="display: flex; gap: 1em; max-width: unset; min-width: unset;">
-        <span>
+      <form class="week-editor--hour-type-container">
+        <span class="week-editor--hour-type-select">
           <input
             type="radio"
             id="radioButtonOffice"
@@ -133,7 +126,7 @@ export const renderWeekEditor = async (username: string) => {
             Office
           </label>
         </span>
-        <span>
+        <span class="week-editor--hour-type-select">
           <input
             type="radio"
             id="radioButtonHome"
@@ -143,6 +136,18 @@ export const renderWeekEditor = async (username: string) => {
           <label for="radioButtonHome">
             <div class="week-editor--radio-button-home" />
             Home
+          </label>
+        </span>
+        <span class="week-editor--hour-type-select">
+          <input
+            type="radio"
+            id="radioButtonHoliday"
+            value="holiday"
+            x-model="hourType"
+          />
+          <label for="radioButtonHoliday">
+            <div class="week-editor--radio-button-holiday" />
+            Holiday
           </label>
         </span>
       </form>

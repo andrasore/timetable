@@ -7,7 +7,7 @@ export interface ReservationTable {
   id: Generated<number>;
   user_id: number;
   date: string;
-  type: 'office' | 'wfh';
+  type: 'office' | 'wfh' | 'holiday';
   from_hour: number;
   to_hour: number;
 }

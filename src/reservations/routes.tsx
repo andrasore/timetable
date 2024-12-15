@@ -21,7 +21,7 @@ export async function routes(fastify: FastifyInstance) {
     fromHour: z.coerce.number(),
     toHour: z.coerce.number(),
     day: z.coerce.number(),
-    hourType: z.union([z.literal('office'), z.literal('wfh')]),
+    hourType: z.union([z.literal('office'), z.literal('wfh'), z.literal('holiday')]),
   });
 
   fastify.post('/reservation', async function (request, reply) {

@@ -91,33 +91,61 @@
 
   th {
     background-color: var(--oc-cyan-3);
-    padding: 7px;
+    padding: 0.3rem;
   }
 
   td {
     border: 1px dashed var(--oc-gray-3);
     background-color: var(--bg);
-    min-width: 11px;
-    min-height: 11px;
-    padding: 7px;
+    height: 3rem;
+    padding: 0.3rem;
+    width: 2.5rem;
+  }
+
+  td.selected {
+    background-color: var(--oc-pink-1);
+    border-top-left-radius: 2em;
+    border-bottom-left-radius: 2em;
+  }
+
+  td.selected ~ td:has(~ td:hover) {
+    background-color: var(--oc-pink-1);
+  }
+
+  td.selected ~ td:hover {
+    background-color: var(--oc-pink-1);
+    border-top-right-radius: 2em;
+    border-bottom-right-radius: 2em;
   }
 
   .marker--office {
     content: url('/icons/business-outline.svg');
-    border: 1px solid var(--oc-indigo-6);
+    border: 1px solid var(--oc-green-6);
     width: 100%;
     border-radius: 4px;
-    background-color: var(--oc-indigo-4);
-    height: 1.2rem;
+    background-color: var(--oc-green-4);
+    padding: 0.4rem;
+    height: 2rem;
   }
 
   .marker--wfh {
     content: url('/icons/home-outline.svg');
-    border: 1px solid var(--oc-orange-6);
+    border: 1px solid var(--oc-indigo-6);
     width: 100%;
     border-radius: 4px;
-    background-color: var(--oc-orange-4);
-    height: 1.2rem;
+    background-color: var(--oc-indigo-4);
+    padding: 0.4rem;
+    height: 2rem;
+  }
+
+  .marker--holiday {
+    content: url('/icons/ice-cream-outline.svg');
+    border: 1px solid var(--oc-gray-6);
+    width: 100%;
+    border-radius: 4px;
+    background-color: var(--oc-gray-4);
+    padding: 0.4rem;
+    height: 2rem;
   }
 
   th:first-child {
@@ -172,10 +200,6 @@
     padding-top: 2em;
   }
 
-  .week-view--table {
-
-  }
-
   .week-editor--container {
     display: flex;
     flex-direction: column;
@@ -184,7 +208,12 @@
   }
 
   .week-editor--table {
+    table-layout: fixed;
+  }
 
+  .week-editor--table-td {
+    width: unset;
+    min-width: 2.5em;
   }
 
   /* TODO use ::before w/ proper tinting */
@@ -192,13 +221,47 @@
     background-image: url('/icons/add-circle-outline.svg');
     background-position: center;
     background-repeat: no-repeat;
+    background-size: 2em 2em;
+  }
+
+  .week-editor--table-td.selected > td:hover {
+    background-color: var(--oc-green-1);
+    border-radius: 2em;
+  }
+
+  .week-editor--hour-type-container {
+    display: flex;
+    gap: 1em;
+    flex-direction: row;
+  }
+
+  .week-editor--hour-type-select {
+    display: flex;
+    gap: 1em;
+    flex-direction: row;
   }
 
   .week-editor--radio-button-office {
-    background-image: url( '/icons/business-outline.svg' );
+    height: 2em;
+    background-image: url('/icons/business-outline.svg');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
   }
 
   .week-editor--radio-button-home {
-    background-image: url( '/icons/home-outline.svg' );
+    height: 2em;
+    background-image: url('/icons/home-outline.svg');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .week-editor--radio-button-holiday {
+    height: 2em;
+    background-image: url('/icons/ice-cream-outline.svg');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
   }
 }
