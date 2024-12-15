@@ -32,7 +32,7 @@ export const renderWeekView = async () => {
       </div>
       <div class="week-view--table-container">
         {WORKING_DAYS.map((d) => (
-          <table>
+          <table class="week-view--table">
             <thead>
               <tr>
                 <th />
@@ -97,8 +97,8 @@ const DayTableRows = ({
             reservation.toHour - reservation.fromHour + 1;
           i += reservationLength - 1;
           rows.push(
-            <td colspan={reservationLength} class={reservation.type}>
-              {HourTypeMap[reservation.type]}
+            <td colspan={reservationLength}>
+              <div class={`marker--${reservation.type}`}/>
             </td>,
           );
         } else {

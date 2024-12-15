@@ -1,7 +1,7 @@
-@layer reset, base, custom;
+@layer reset, base, app;
 
 @import url('https://fonts.googleapis.com/css2?family=Playwrite+HU:wght@100..400&family=Rouge+Script&display=swap') layer(base);
-@import url(open-color.css) layer(base);
+@import url('open-color.css') layer(base);
 
 @layer reset {
   *, *::before, *::after {
@@ -30,11 +30,14 @@
       font-family: Tahoma, Verdana, Sans;
   }
 
-  input, button, textarea, select {
+  input, textarea, select {
     font-family: 'system-ui', Tahoma, Verdana, Sans;
+    border: solid 1px var(--oc-cyan-9);
+    border-radius: 3px;
   }
 
   button {
+    font-family: 'system-ui', Tahoma, Verdana, Sans;
     font-variant: all-small-caps;
     padding: 0.4rem 0.80rem 0.55rem 0.8rem;
     border: solid 1px var(--oc-cyan-9);
@@ -68,6 +71,7 @@
 
   main {
       color: light-dark(var(--oc-gray-9), var(--oc-gray-0));
+      margin: 0 1vw;
       @media only screen and (min-width: 768px) {
         margin: 0 2.5vw;
       }
@@ -76,39 +80,57 @@
   table {
     color: var(--bg);
     box-shadow: 0 0.2rem 0.2rem var(--oc-gray-4);
-    background-color: var(--oc-cyan-4);
     border-spacing: 0;
     border: 1px solid var(--oc-cyan-5);
     border-radius: 3px;
   }
-  table th {
+
+  thead {
+    border-color: var(--oc-cyan-3);
+  }
+
+  th {
     background-color: var(--oc-cyan-3);
     padding: 7px;
   }
-  table td {
+
+  td {
+    border: 1px dashed var(--oc-gray-3);
     background-color: var(--bg);
     min-width: 11px;
     min-height: 11px;
     padding: 7px;
   }
-  table td.office {
-    background-color: #048A81;
-    border-radius: 10px;
+
+  .marker--office {
+    content: url('/icons/business-outline.svg');
+    border: 1px solid var(--oc-indigo-6);
+    width: 100%;
+    border-radius: 4px;
+    background-color: var(--oc-indigo-4);
+    height: 1.2rem;
   }
-  table td.wfh {
-    background-color: #FDE2FF;
-    border-radius: 10px;
+
+  .marker--wfh {
+    content: url('/icons/home-outline.svg');
+    border: 1px solid var(--oc-orange-6);
+    width: 100%;
+    border-radius: 4px;
+    background-color: var(--oc-orange-4);
+    height: 1.2rem;
   }
-  table th:first-child {
+
+  th:first-child {
     background-color: var(--oc-cyan-3);
     font-weight: bold;
   }
-  table td:first-child {
+
+  td:first-child {
     color: var(--fg);
   }
 }
 
-@layer custom {
+@layer app {
   .nav--title {
     font-family: "Playwrite HU";
     color: var(--oc-gray-0);
@@ -123,7 +145,7 @@
   }
 
   .nav--login-icon {
-    background-image: url( '/icons/person-circle-outline.svg' );
+    background-image: url('/icons/person-circle-outline.svg');
     filter: invert() brightness(95%);
     background-position: center;
     background-repeat: no-repeat;
@@ -150,6 +172,10 @@
     padding-top: 2em;
   }
 
+  .week-view--table {
+
+  }
+
   .week-editor--container {
     display: flex;
     flex-direction: column;
@@ -157,7 +183,22 @@
     padding-top: 2em;
   }
 
+  .week-editor--table {
+
+  }
+
+  /* TODO use ::before w/ proper tinting */
   .week-editor--table-td:hover:not(.selected) {
     background-image: url('/icons/add-circle-outline.svg');
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .week-editor--radio-button-office {
+    background-image: url( '/icons/business-outline.svg' );
+  }
+
+  .week-editor--radio-button-home {
+    background-image: url( '/icons/home-outline.svg' );
   }
 }

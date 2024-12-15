@@ -57,7 +57,7 @@ export const renderWeekEditor = async (username: string) => {
         <h1>{weekNo}. hét</h1>
         <button hx-get="/week">Back</button>
       </div>
-      <table style="display: table;">
+      <table class="week-editor--table">
         <thead>
           <tr>
             <th></th>
@@ -96,6 +96,7 @@ export const renderWeekEditor = async (username: string) => {
                     hx-swap="outerHTML"
                     hx-vals={`{"fromHour":${reservation.fromHour},"toHour":${reservation.toHour},"day":${day}}`}
                         >
+                    <div class={`marker--${reservation.type}`} />
                     {HourTypeMap[reservation.type]}
                   </td>,
                 );
@@ -128,7 +129,7 @@ export const renderWeekEditor = async (username: string) => {
             x-model="hourType"
           />
           <label for="radioButtonOffice">
-            <div style="background-image: url( '/icons/business-outline.svg' );" />
+            <div class="week-editor--radio-button-office" />
             Office
           </label>
         </span>
@@ -140,7 +141,7 @@ export const renderWeekEditor = async (username: string) => {
             x-model="hourType"
           />
           <label for="radioButtonHome">
-            <div style="background-image: url( '/icons/home-outline.svg' );" />
+            <div class="week-editor--radio-button-home" />
             Home
           </label>
         </span>
