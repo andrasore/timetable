@@ -77,6 +77,14 @@
       }
   }
 
+  dialog {
+      position: fixed;
+      color: light-dark(var(--oc-gray-9), var(--oc-gray-0));
+      border: 1px solid var(--oc-cyan-5);
+      border-radius: 3px;
+      top: 10vw;
+  }
+
   table {
     color: var(--bg);
     box-shadow: 0 0.2rem 0.2rem var(--oc-gray-4);
@@ -198,6 +206,12 @@
     gap: 2em;
     padding-top: 2em;
     padding-bottom: 2em;
+  }
+
+  .week-view--title-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
   }
 
   .week-view--table-container {

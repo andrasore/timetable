@@ -6,12 +6,6 @@ const WORKING_HOURS = [
   6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
 ] as const;
 
-const HourTypeMap = {
-  office: 'i',
-  wfh: 'x',
-  none: '',
-} as const;
-
 export const renderWeekView = async () => {
   const users = await db.selectFrom('user').select(['username']).execute();
 
@@ -26,7 +20,7 @@ export const renderWeekView = async () => {
       hx-trigger="newUser from:body"
       class="week-view--container"
     >
-      <div style="display: flex; flex-direction: row; justify-content: space-between;">
+      <div class="week-view--title-container">
         <h1>{weekNo}. hét</h1>
         <button hx-get="/editor">Edit</button>
       </div>
