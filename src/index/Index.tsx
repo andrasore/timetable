@@ -1,10 +1,9 @@
-import type { FastifyRequest } from 'fastify';
+import type { DateTime } from 'luxon';
 import { renderWeekView } from '../reservations/WeekView.tsx';
 import { renderLoginForm } from '../users/LoginForm.tsx';
 
-export const renderIndex = async (request: FastifyRequest) => {
-  const WeekView = await renderWeekView();
-  const username = request.cookies['username'];
+export const renderIndex = async (fromDate: DateTime, username?: string) => {
+  const WeekView = await renderWeekView(fromDate);
   const LoginForm = await renderLoginForm(username);
 
   return () => (

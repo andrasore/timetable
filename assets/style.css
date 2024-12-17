@@ -1,18 +1,30 @@
 @layer reset, base, app;
 
-@import url('https://fonts.googleapis.com/css2?family=Playwrite+HU:wght@100..400&family=Rouge+Script&display=swap') layer(base);
+@import url('https://fonts.googleapis.com/css2?family=Playwrite+HU:wght@100..400&family=Rouge+Script&display=swap')
+layer(base);
 @import url('open-color.css') layer(base);
 
 @layer reset {
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     box-sizing: border-box;
   }
 
-  input, button, textarea, select {
+  input,
+  button,
+  textarea,
+  select {
     font: inherit;
   }
 
-  body, h1, h2, h3, h4, h5, h6 {
+  body,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     margin: 0;
   }
 }
@@ -25,12 +37,14 @@
   }
 
   body {
-      color: var(--fg);
-      background-color: var(--bg);
-      font-family: Tahoma, Verdana, Sans;
+    color: var(--fg);
+    background-color: var(--bg);
+    font-family: Tahoma, Verdana, Sans;
   }
 
-  input, textarea, select {
+  input,
+  textarea,
+  select {
     font-family: 'system-ui', Tahoma, Verdana, Sans;
     border: solid 1px var(--oc-cyan-9);
     border-radius: 3px;
@@ -39,53 +53,96 @@
   button {
     font-family: 'system-ui', Tahoma, Verdana, Sans;
     font-variant: all-small-caps;
-    padding: 0.4rem 0.80rem 0.55rem 0.8rem;
+    padding: 0.4rem 0.8rem 0.55rem 0.8rem;
     border: solid 1px var(--oc-cyan-9);
     border-radius: 3px;
-    background: linear-gradient(180deg, var(--oc-cyan-4) 90%, var(--oc-cyan-6) 100%);
+    background: linear-gradient(
+      180deg,
+      var(--oc-cyan-4) 90%,
+      var(--oc-cyan-6) 100%
+    );
     min-width: 5rem;
-    color: var(--oc-white);
+    color: var(--oc-gray-0);
     font-weight: bold;
   }
 
   button:hover {
-    background: linear-gradient(180deg, var(--oc-cyan-3) 90%, var(--oc-cyan-5) 100%);
+    background: linear-gradient(
+      180deg,
+      var(--oc-cyan-3) 90%,
+      var(--oc-cyan-5) 100%
+    );
   }
 
   button:active {
-    background: linear-gradient(0deg, var(--oc-cyan-3) 90%, var(--oc-cyan-5) 100%);
-    padding: 0.5rem 0.80rem 0.45rem 0.8rem;
+    background: linear-gradient(
+      0deg,
+      var(--oc-cyan-3) 90%,
+      var(--oc-cyan-5) 100%
+    );
+    padding: 0.5rem 0.8rem 0.45rem 0.8rem;
   }
 
+  button.secondary {
+    color: var(--fg);
+    border: solid 1px var(--oc-gray-5);
+    background: linear-gradient(
+      180deg,
+      var(--bg) 90%,
+      light-dark(var(--oc-gray-3), var(--oc-gray-7)) 100%
+    );
+  }
+
+  button.secondary:hover {
+    border: solid 1px var(--primary);
+    background: linear-gradient(
+      180deg,
+      var(--bg) 90%,
+      var(--oc-cyan-6) 100%
+    );
+    color: var(--primary);
+  }
+
+  button.secondary:active {
+    border: solid 1px var(--primary);
+    background: linear-gradient(
+      0deg,
+      var(--bg) 90%,
+      var(--oc-cyan-6) 100%
+    );
+    color: var(--primary);
+  }
+
+
   header {
-      display: flex;
-      flex-direction: horizontal;
-      justify-content: space-between;
-      padding: 0 2rem 0 2rem;
-      color: var(--fg);
-      background-color: light-dark(var(--oc-cyan-4), var(--oc-cyan-9));
-      border-bottom: solid 1px var(--oc-cyan-6);
-      box-shadow: 0 0.2rem 0.2rem var(--oc-gray-4);
-      height: 5.5rem;
+    display: flex;
+    flex-direction: horizontal;
+    justify-content: space-between;
+    padding: 0 2rem 0 2rem;
+    color: var(--fg);
+    background-color: light-dark(var(--oc-cyan-4), var(--oc-cyan-9));
+    border-bottom: solid 1px var(--oc-cyan-6);
+    box-shadow: 0 0.2rem 0.2rem var(--oc-gray-4);
+    height: 5.5rem;
   }
 
   main {
-      color: light-dark(var(--oc-gray-9), var(--oc-gray-0));
-      margin: 0 1vw;
-      @media only screen and (min-width: 768px) {
-        margin: 0 2.5vw;
-      }
+    color: light-dark(var(--oc-gray-9), var(--oc-gray-0));
+    margin: 0 1vw;
+    @media only screen and (min-width: 768px) {
+      margin: 0 2.5vw;
+    }
   }
 
   dialog {
-      position: fixed;
-      background-color: var(--bg);
-      color: var(--fg);
-      border: 1px solid var(--oc-cyan-5);
-      border-radius: 3px;
-      top: 10vw;
-      opacity: 1;
-      transition: opacity 0.2s ease-out;
+    position: fixed;
+    background-color: var(--bg);
+    color: var(--fg);
+    border: 1px solid var(--oc-cyan-5);
+    border-radius: 3px;
+    top: 10vw;
+    opacity: 1;
+    transition: opacity 0.2s ease-out;
   }
 
   @starting-style {
@@ -184,7 +241,7 @@
   }
 
   .nav--title {
-    font-family: "Playwrite HU";
+    font-family: 'Playwrite HU';
     color: var(--oc-gray-0);
     text-shadow: 1px 1px var(--oc-cyan-9);
   }
@@ -206,7 +263,7 @@
   }
 
   .nav--login-name {
-    color: var(--bg)
+    color: var(--bg);
   }
 
   .week-view--container {
@@ -223,29 +280,11 @@
     justify-content: space-between;
   }
 
-  .week-view--title-container--backward-icon {
-    background-image: url('/icons/arrow-back-outline.svg');
-    filter: invert() brightness(95%);
-    background-position: center;
-    background-repeat: no-repeat;
-    width: 2em;
-    height: 2em;
-  }
-
-  .week-view--title-container--forward-icon {
-    background-image: url('/icons/arrow-forward-outline.svg');
-    filter: invert() brightness(95%);
-    background-position: center;
-    background-repeat: no-repeat;
-    width: 2em;
-    height: 2em;
-  }
-
   .week-view--table-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 2em;
-    padding-top: 2em;
+    gap: 2rem;
+    padding-top: 2rem;
   }
 
   .week-editor--table {
@@ -265,8 +304,8 @@
     display: flex;
     flex-direction: column;
     align-items: start;
-    gap: 2em;
-    padding-top: 2em;
+    gap: 2rem;
+    padding-top: 2rem;
   }
 
   /* TODO use ::before w/ proper tinting */
@@ -274,29 +313,29 @@
     background-image: url('/icons/add-circle-outline.svg');
     background-position: center;
     background-repeat: no-repeat;
-    background-size: 2em 2em;
+    background-size: 2rem 2rem;
   }
 
   .week-editor--table-td.selected > td:hover {
     background-color: var(--oc-green-1);
-    border-radius: 2em;
+    border-radius: 2rem;
   }
 
   .week-editor--hour-type-container {
     display: flex;
-    gap: 1em;
+    gap: 1rem;
     flex-direction: row;
   }
 
   .week-editor--hour-type-select {
     display: flex;
-    gap: 1em;
+    gap: 1rem;
     flex-direction: row;
   }
 
   .week-editor--radio-button-office {
-    height: 2em;
-    width: 2em;
+    height: 2rem;
+    width: 2rem;
     background-image: url('/icons/business-outline.svg');
     background-size: contain;
     background-position: center;
@@ -304,8 +343,8 @@
   }
 
   .week-editor--radio-button-wfh {
-    height: 2em;
-    width: 2em;
+    height: 2rem;
+    width: 2rem;
     background-image: url('/icons/home-outline.svg');
     background-size: contain;
     background-position: center;
@@ -313,8 +352,8 @@
   }
 
   .week-editor--radio-button-holiday {
-    height: 2em;
-    width: 2em;
+    height: 2rem;
+    width: 2rem;
     background-image: url('/icons/ice-cream-outline.svg');
     background-size: contain;
     background-position: center;

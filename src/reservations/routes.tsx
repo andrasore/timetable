@@ -6,8 +6,15 @@ import { renderWeekView } from './WeekView.tsx';
 import { renderWeekEditor } from './WeekEditor.tsx';
 
 export async function routes(fastify: FastifyInstance) {
-  fastify.get('/week', async function (request, reply) {
-    const WeekView = await renderWeekView();
+  const WeekViewParamsSchema = z.object({
+    year: z.coerce.number(),
+    weekNo: z.coerce.number(),
+  });
+
+  fastify.get('/week-view/:year/:weekNo', async function (request, reply) {
+    const { year, weekNo } = WeekViewParamsSchema.parse(request.params);
+    const fromDate = DateTime.utc(year).plus({ weeks: weekNo - 1 });
+    const WeekView = await renderWeekView(fromDate);
     return reply.html(<WeekView />);
   });
 
@@ -21,7 +28,11 @@ export async function routes(fastify: FastifyInstance) {
     fromHour: z.coerce.number(),
     toHour: z.coerce.number(),
     day: z.coerce.number(),
-    hourType: z.union([z.literal('office'), z.literal('wfh'), z.literal('holiday')]),
+    hourType: z.union([
+      z.literal('office'),
+      z.literal('wfh'),
+      z.literal('holiday'),
+    ]),
   });
 
   fastify.post('/reservation', async function (request, reply) {
@@ -88,7 +99,7 @@ export async function routes(fastify: FastifyInstance) {
     // table data would have to have correct metadata as seen in WeekEditor.ts
     //let replacedHours = [];
     //for (let i = 0; i <= body.toHour - body.fromHour; i++) {
-      //replacedHours.push(<td/>);
+    //replacedHours.push(<td/>);
     //}
     //return reply.html(<>{replacedHours}</>);
   });

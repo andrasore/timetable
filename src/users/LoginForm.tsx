@@ -1,6 +1,6 @@
 const LoggedInForm = ({ username }: { username: string }) => (
   <form hx-target="this" hx-swap="outerHTML" class="nav--login-form">
-    <div class="nav--login-icon"/>
+    <div class="nav--login-icon" />
     <b class="nav--login-name">{username}</b>
     <button hx-get="/logout">
       <i>Logout</i>
@@ -10,11 +10,7 @@ const LoggedInForm = ({ username }: { username: string }) => (
 
 const NotLoggedInForm = () => (
   <form hx-target="this" hx-swap="outerHTML" class="nav--login-form">
-    <input
-      type="text"
-      name="username"
-      placeholder="Username"
-    />
+    <input type="text" name="username" placeholder="Username" />
     <button hx-post="/login">
       <b>Login</b>
     </button>

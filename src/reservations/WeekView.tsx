@@ -6,11 +6,11 @@ const WORKING_HOURS = [
   6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
 ] as const;
 
-export const renderWeekView = async () => {
+export const renderWeekView = async (from: DateTime) => {
   const users = await db.selectFrom('user').select(['username']).execute();
 
-  const weekNo = DateTime.now().setLocale('hu').weekNumber;
-  const reservations = await queryReservations();
+  const weekNo = from.setLocale('hu').weekNumber;
+  const reservations = await queryReservations(from);
 
   return () => (
     <div
@@ -21,16 +21,26 @@ export const renderWeekView = async () => {
       class="week-view--container"
     >
       <div class="week-view--title-container">
-      <div style="display: flex; gap: 1em">
-        <button style="min-width: unset;">
-          <div class="week-view--title-container--backward-icon"/>
-        </button>
-        <h1>{weekNo}. hét</h1>
-        <button style="min-width: unset;">
-          <div class="week-view--title-container--forward-icon"/>
-        </button>
-      </div>
-        <button hx-get="/editor">Edit</button>
+        <div style="display: flex; gap: 1em">
+          <button
+            style="min-width: unset;"
+            class="secondary"
+            hx-get={'/week-view' + getPreviousWeekUrl(from)}
+            hx-push-url={getPreviousWeekUrl(from)}
+          >
+            ←
+          </button>
+          <h1>{weekNo}. hét</h1>
+          <button
+            style="min-width: unset;"
+            class="secondary"
+            hx-get={'/week-view' + getNextWeekUrl(from)}
+            hx-push-url={getNextWeekUrl(from)}
+          >
+            →
+          </button>
+        </div>
+        <button class="secondary" hx-get="/editor">Edit</button>
       </div>
       <div class="week-view--table-container">
         {WORKING_DAYS.map((d) => (
@@ -60,6 +70,7 @@ export const renderWeekView = async () => {
               <DayTableRows
                 users={users.map((u) => u.username)}
                 reservations={reservations}
+                startOfWeek={from.setLocale('hu')}
                 dayNo={d}
               />
             </tbody>
@@ -73,19 +84,18 @@ export const renderWeekView = async () => {
 const DayTableRows = ({
   users,
   reservations,
+  startOfWeek,
   dayNo,
 }: {
   users: string[];
   reservations: Awaited<ReturnType<typeof queryReservations>>;
+  startOfWeek: DateTime;
   dayNo: number;
 }) => (
   <>
     {users.map((user) => {
       const rows = [];
-      const date = DateTime.now()
-        .startOf('week')
-        .plus({ days: dayNo })
-        .toISODate();
+      const date = startOfWeek.plus({ days: dayNo }).toISODate();
 
       for (let i = 0; i < WORKING_HOURS.length; i++) {
         const reservation = reservations?.[user]?.find(
@@ -100,7 +110,7 @@ const DayTableRows = ({
           i += reservationLength - 1;
           rows.push(
             <td colspan={reservationLength}>
-              <div class={`marker--${reservation.type}`}/>
+              <div class={`marker--${reservation.type}`} />
             </td>,
           );
         } else {
@@ -118,9 +128,9 @@ const DayTableRows = ({
   </>
 );
 
-const queryReservations = async () => {
-  const startOfWeek = DateTime.now().startOf('week').toISODate();
-  const endOfWeek = DateTime.now().endOf('week').toISODate();
+const queryReservations = async (from: DateTime) => {
+  const startOfWeek = from.setLocale('hu').startOf('week').toISODate();
+  const endOfWeek = from.setLocale('hu').endOf('week').toISODate();
 
   const result = await db
     .selectFrom('reservation')
@@ -141,4 +151,20 @@ const queryReservations = async () => {
     .execute();
 
   return Object.groupBy(result, (res) => res.username);
+};
+
+const getPreviousWeekUrl = (from: DateTime) => {
+  if (from.weekNumber == 1) {
+    return `/${from.year - 1}/52`;
+  } else {
+    return `/${from.year}/${from.weekNumber - 1}`;
+  }
+};
+
+const getNextWeekUrl = (from: DateTime) => {
+  if (from.weekNumber == 52) {
+    return `/${from.year + 1}/1`;
+  } else {
+    return `/${from.year}/${from.weekNumber + 1}`;
+  }
 };

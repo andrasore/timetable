@@ -49,7 +49,7 @@ export const renderWeekEditor = async (username: string) => {
     >
       <div class="week-editor--title-container">
         <h1>{weekNo}. hét</h1>
-        <button hx-get="/week">Back</button>
+        <button class="secondary" hx-get="/week">Back</button>
       </div>
       <table class="week-editor--table">
         <thead>
@@ -89,7 +89,7 @@ export const renderWeekEditor = async (username: string) => {
                     hx-post="/delete-reservation"
                     hx-swap="outerHTML"
                     hx-vals={`{"fromHour":${reservation.fromHour},"toHour":${reservation.toHour},"day":${day}}`}
-                        >
+                  >
                     <div class={`marker--${reservation.type}`} />
                   </td>,
                 );
@@ -122,18 +122,18 @@ export const renderWeekEditor = async (username: string) => {
   );
 };
 
-const HourTypeSelect = ({ hourType }: { hourType: string }) =>
-<label for={`radioButton__${hourType}`} class="week-editor--hour-type-select">
-  <input
-    type="radio"
-    id={`radioButton__${hourType}`}
-    value={hourType}
-    x-model="hourType"
-  />
-  <div class={`week-editor--radio-button-${hourType}`}/>
-  {hourType}
-</label>;
-
+const HourTypeSelect = ({ hourType }: { hourType: string }) => (
+  <label for={`radioButton__${hourType}`} class="week-editor--hour-type-select">
+    <input
+      type="radio"
+      id={`radioButton__${hourType}`}
+      value={hourType}
+      x-model="hourType"
+    />
+    <div class={`week-editor--radio-button-${hourType}`} />
+    {hourType}
+  </label>
+);
 
 const queryReservations = async (username: string) => {
   const startOfWeek = DateTime.now().startOf('week').toISODate();
