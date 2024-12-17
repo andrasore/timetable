@@ -21,7 +21,15 @@ export const renderWeekView = async () => {
       class="week-view--container"
     >
       <div class="week-view--title-container">
+      <div style="display: flex; gap: 1em">
+        <button style="min-width: unset;">
+          <div class="week-view--title-container--backward-icon"/>
+        </button>
         <h1>{weekNo}. hét</h1>
+        <button style="min-width: unset;">
+          <div class="week-view--title-container--forward-icon"/>
+        </button>
+      </div>
         <button hx-get="/editor">Edit</button>
       </div>
       <div class="week-view--table-container">

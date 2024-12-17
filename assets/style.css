@@ -79,10 +79,19 @@
 
   dialog {
       position: fixed;
-      color: light-dark(var(--oc-gray-9), var(--oc-gray-0));
+      background-color: var(--bg);
+      color: var(--fg);
       border: 1px solid var(--oc-cyan-5);
       border-radius: 3px;
       top: 10vw;
+      opacity: 1;
+      transition: opacity 0.2s ease-out;
+  }
+
+  @starting-style {
+    dialog {
+      opacity: 0;
+    }
   }
 
   table {
@@ -214,6 +223,24 @@
     justify-content: space-between;
   }
 
+  .week-view--title-container--backward-icon {
+    background-image: url('/icons/arrow-back-outline.svg');
+    filter: invert() brightness(95%);
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 2em;
+    height: 2em;
+  }
+
+  .week-view--title-container--forward-icon {
+    background-image: url('/icons/arrow-forward-outline.svg');
+    filter: invert() brightness(95%);
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 2em;
+    height: 2em;
+  }
+
   .week-view--table-container {
     display: flex;
     flex-wrap: wrap;
@@ -269,14 +296,16 @@
 
   .week-editor--radio-button-office {
     height: 2em;
+    width: 2em;
     background-image: url('/icons/business-outline.svg');
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
   }
 
-  .week-editor--radio-button-home {
+  .week-editor--radio-button-wfh {
     height: 2em;
+    width: 2em;
     background-image: url('/icons/home-outline.svg');
     background-size: contain;
     background-position: center;
@@ -285,6 +314,7 @@
 
   .week-editor--radio-button-holiday {
     height: 2em;
+    width: 2em;
     background-image: url('/icons/ice-cream-outline.svg');
     background-size: contain;
     background-position: center;

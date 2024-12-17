@@ -114,46 +114,26 @@ export const renderWeekEditor = async (username: string) => {
       </table>
       {/* FIXME bug where form is reset after creating a reservation */}
       <form class="week-editor--hour-type-container">
-        <span class="week-editor--hour-type-select">
-          <input
-            type="radio"
-            id="radioButtonOffice"
-            value="office"
-            x-model="hourType"
-          />
-          <label for="radioButtonOffice">
-            <div class="week-editor--radio-button-office" />
-            Office
-          </label>
-        </span>
-        <span class="week-editor--hour-type-select">
-          <input
-            type="radio"
-            id="radioButtonHome"
-            value="wfh"
-            x-model="hourType"
-          />
-          <label for="radioButtonHome">
-            <div class="week-editor--radio-button-home" />
-            Home
-          </label>
-        </span>
-        <span class="week-editor--hour-type-select">
-          <input
-            type="radio"
-            id="radioButtonHoliday"
-            value="holiday"
-            x-model="hourType"
-          />
-          <label for="radioButtonHoliday">
-            <div class="week-editor--radio-button-holiday" />
-            Holiday
-          </label>
-        </span>
+        <HourTypeSelect hourType="office" />
+        <HourTypeSelect hourType="wfh" />
+        <HourTypeSelect hourType="holiday" />
       </form>
     </div>
   );
 };
+
+const HourTypeSelect = ({ hourType }: { hourType: string }) =>
+<label for={`radioButton__${hourType}`} class="week-editor--hour-type-select">
+  <input
+    type="radio"
+    id={`radioButton__${hourType}`}
+    value={hourType}
+    x-model="hourType"
+  />
+  <div class={`week-editor--radio-button-${hourType}`}/>
+  {hourType}
+</label>;
+
 
 const queryReservations = async (username: string) => {
   const startOfWeek = DateTime.now().startOf('week').toISODate();
