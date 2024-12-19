@@ -171,9 +171,9 @@ layer(base);
   td {
     border: 1px dashed var(--oc-gray-3);
     background-color: var(--bg);
-    height: 3rem;
-    padding: 0.3rem;
-    width: 2.5rem;
+    height: 2rem;
+    padding: 0.1rem;
+    width: 2rem;
   }
 
   td.selected {
@@ -198,8 +198,8 @@ layer(base);
     width: 100%;
     border-radius: 4px;
     background-color: var(--oc-green-4);
-    padding: 0.4rem;
-    height: 2rem;
+    padding: 0.2rem;
+    height: 1.4rem;
   }
 
   .marker--wfh {
@@ -208,8 +208,8 @@ layer(base);
     width: 100%;
     border-radius: 4px;
     background-color: var(--oc-indigo-4);
-    padding: 0.4rem;
-    height: 2rem;
+    padding: 0.2rem;
+    height: 1.4rem;
   }
 
   .marker--holiday {
@@ -218,8 +218,8 @@ layer(base);
     width: 100%;
     border-radius: 4px;
     background-color: var(--oc-gray-4);
-    padding: 0.4rem;
-    height: 2rem;
+    padding: 0.2rem;
+    height: 1.4rem;
   }
 
   th:first-child {
@@ -269,9 +269,9 @@ layer(base);
   .week-view--container {
     display: flex;
     flex-direction: column;
-    gap: 2em;
-    padding-top: 2em;
-    padding-bottom: 2em;
+    gap: 2rem;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
   }
 
   .week-view--title-container {
@@ -284,7 +284,6 @@ layer(base);
     display: flex;
     flex-wrap: wrap;
     gap: 2rem;
-    padding-top: 2rem;
   }
 
   .week-editor--table {
@@ -306,6 +305,7 @@ layer(base);
     align-items: start;
     gap: 2rem;
     padding-top: 2rem;
+    padding-bottom: 2rem;
   }
 
   /* TODO use ::before w/ proper tinting */

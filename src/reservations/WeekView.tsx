@@ -21,7 +21,7 @@ export const renderWeekView = async (from: DateTime) => {
       class="week-view--container"
     >
       <div class="week-view--title-container">
-        <div style="display: flex; gap: 1em">
+        <div style="display: flex; gap: 1rem">
           <button
             style="min-width: unset;"
             class="secondary"
@@ -30,7 +30,7 @@ export const renderWeekView = async (from: DateTime) => {
           >
             ←
           </button>
-          <h1>{weekNo}. hét</h1>
+          <h2>{weekNo}. hét</h2>
           <button
             style="min-width: unset;"
             class="secondary"

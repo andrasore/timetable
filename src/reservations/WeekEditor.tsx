@@ -6,9 +6,9 @@ const WORKING_HOURS = [
   6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
 ] as const;
 
-export const renderWeekEditor = async (username: string) => {
+export const renderWeekEditor = async (from: DateTime, username: string) => {
   const reservations = await queryReservations(username);
-  const weekNo = DateTime.now().setLocale('hu').weekNumber;
+  const weekNo = from.setLocale('hu').weekNumber;
 
   return () => (
     <div
@@ -46,10 +46,10 @@ export const renderWeekEditor = async (username: string) => {
             }
           },
         }"
-    >
+      >
       <div class="week-editor--title-container">
-        <h1>{weekNo}. hét</h1>
-        <button class="secondary" hx-get="/week">Back</button>
+        <h2>{weekNo}. hét</h2>
+        <button class="secondary" hx-get={getWeekUrl(from)}>Back</button>
       </div>
       <table class="week-editor--table">
         <thead>
@@ -157,4 +157,8 @@ const queryReservations = async (username: string) => {
       ]),
     )
     .execute();
+};
+
+const getWeekUrl = (from: DateTime) => {
+  return `/${from.year}/${from.weekNumber}`;
 };
