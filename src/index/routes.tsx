@@ -11,6 +11,14 @@ export async function routes(fastify: FastifyInstance) {
     return reply.htmlRoot(<Index />);
   });
 
+  /** This is for loading index with HTMX */
+  fastify.get('/index', async function (request, reply) {
+    const fromDate = DateTime.now().startOf('week');
+    const username = request.cookies['username'];
+    const Index = await renderIndex(fromDate, username);
+    return reply.html(<Index />);
+  });
+
   const WeekViewParamsSchema = z.object({
     year: z.coerce.number(),
     weekNo: z.coerce.number(),

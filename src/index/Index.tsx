@@ -7,16 +7,16 @@ export const renderIndex = async (fromDate: DateTime, username?: string) => {
   const LoginForm = await renderLoginForm(username);
 
   return () => (
-    <>
+    <body>
       <header>
         <div class="nav--title-container">
-          <h1 class="nav--title">Munkaidő</h1>
+          <h1 class="nav--title" hx-get="/index" hx-push-url="/" hx-target="closest body">Munkaidő</h1>
         </div>
         <LoginForm />
       </header>
       <main>
         <WeekView />
       </main>
-    </>
+    </body>
   );
 };

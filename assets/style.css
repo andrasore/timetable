@@ -240,6 +240,10 @@ layer(base);
     gap: 20px;
   }
 
+  .nav--title-container:hover {
+    cursor: pointer;
+  }
+
   .nav--title {
     font-family: 'Playwrite HU';
     color: var(--oc-gray-0);
