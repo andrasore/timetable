@@ -16,7 +16,7 @@ export const renderWeekView = async (from: DateTime) => {
     <div
       hx-target="this"
       hx-swap="outerHTML"
-      hx-get="/week"
+      hx-get={getViewerUrl(from)}
       hx-trigger="newUser from:body"
       class="week-view--container"
     >
@@ -40,7 +40,7 @@ export const renderWeekView = async (from: DateTime) => {
             →
           </button>
         </div>
-        <button class="secondary" hx-get="/editor">Edit</button>
+        <button class="secondary" hx-get={getEditorUrl(from)}>Edit</button>
       </div>
       <div class="week-view--table-container">
         {WORKING_DAYS.map((d) => (
@@ -167,4 +167,12 @@ const getNextWeekUrl = (from: DateTime) => {
   } else {
     return `/${from.year}/${from.weekNumber + 1}`;
   }
+};
+
+const getEditorUrl = (from: DateTime) => {
+  return `/week-editor/${from.year}/${from.weekNumber - 1}`;
+};
+
+const getViewerUrl = (from: DateTime) => {
+  return `/week-view/${from.year}/${from.weekNumber - 1}`;
 };

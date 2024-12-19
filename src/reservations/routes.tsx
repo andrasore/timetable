@@ -18,9 +18,16 @@ export async function routes(fastify: FastifyInstance) {
     return reply.html(<WeekView />);
   });
 
-  fastify.get('/editor', async function (request, reply) {
+  const WeekEditorParamsSchema = z.object({
+    year: z.coerce.number(),
+    weekNo: z.coerce.number(),
+  });
+
+  fastify.get('/week-editor/:year/:weekNo', async function (request, reply) {
     const username = request.cookies['username'];
-    const WeekEditor = await renderWeekEditor(username!);
+    const { year, weekNo } = WeekEditorParamsSchema.parse(request.params);
+    const fromDate = DateTime.utc(year).plus({ weeks: weekNo - 1 });
+    const WeekEditor = await renderWeekEditor(fromDate, username!);
     return reply.html(<WeekEditor />);
   });
 

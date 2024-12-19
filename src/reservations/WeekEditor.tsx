@@ -7,7 +7,7 @@ const WORKING_HOURS = [
 ] as const;
 
 export const renderWeekEditor = async (from: DateTime, username: string) => {
-  const reservations = await queryReservations(username);
+  const reservations = await queryReservations(from, username);
   const weekNo = from.setLocale('hu').weekNumber;
 
   return () => (
@@ -62,7 +62,7 @@ export const renderWeekEditor = async (from: DateTime, username: string) => {
         </thead>
         <tbody>
           {WORKING_DAYS.map((day) => {
-            const currentDay = DateTime.now()
+            const currentDay = from
               .startOf('week')
               .plus({ days: day });
             // Rendering working hours as larger bricks instead of individual
@@ -135,9 +135,9 @@ const HourTypeSelect = ({ hourType }: { hourType: string }) => (
   </label>
 );
 
-const queryReservations = async (username: string) => {
-  const startOfWeek = DateTime.now().startOf('week').toISODate();
-  const endOfWeek = DateTime.now().endOf('week').toISODate();
+const queryReservations = async (from: DateTime, username: string) => {
+  const startOfWeek = from.startOf('week').toISODate();
+  const endOfWeek = from.endOf('week').toISODate();
 
   return db
     .selectFrom('reservation')
@@ -160,5 +160,5 @@ const queryReservations = async (username: string) => {
 };
 
 const getWeekUrl = (from: DateTime) => {
-  return `/${from.year}/${from.weekNumber}`;
+  return `/week-view/${from.year}/${from.weekNumber}`;
 };
