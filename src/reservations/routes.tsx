@@ -31,6 +31,11 @@ export async function routes(fastify: FastifyInstance) {
     return reply.html(<WeekEditor />);
   });
 
+  const PostReservationParamsSchema = z.object({
+    year: z.coerce.number(),
+    weekNo: z.coerce.number(),
+  });
+
   const PostReservationReqSchema = z.object({
     fromHour: z.coerce.number(),
     toHour: z.coerce.number(),
@@ -42,31 +47,41 @@ export async function routes(fastify: FastifyInstance) {
     ]),
   });
 
-  fastify.post('/reservation', async function (request, reply) {
+  fastify.post('/:year/:weekNo/reservation', async function (request, reply) {
+    const { year, weekNo } = PostReservationParamsSchema.parse(request.params);
     const username = request.cookies['username']!;
     const userId = db
       .selectFrom('user')
       .select('id')
       .where('username', '=', username);
 
-    const body = PostReservationReqSchema.parse(request.body);
+    const { fromHour, toHour, hourType, day } = PostReservationReqSchema.parse(
+      request.body,
+    );
+
+    const date = DateTime.utc(year)
+      .plus({ weeks: weekNo - 1 })
+      .setLocale('hu')
+      .startOf('week')
+      .plus({ days: day });
 
     await db
       .insertInto('reservation')
       .values({
         user_id: userId,
-        from_hour: body.fromHour,
-        to_hour: body.toHour,
-        type: body.hourType,
-        // TODO allow insert for other weeks as well
-        date: DateTime.now()
-          .startOf('week')
-          .plus({ days: body.day })
-          .toISODate(),
+        from_hour: fromHour,
+        to_hour: toHour,
+        type: hourType,
+        date: date.toISODate()!,
       })
       .execute();
 
     reply.header('HX-Trigger', 'newReservation');
+  });
+
+  const DeleteReservationParamsSchema = z.object({
+    year: z.coerce.number(),
+    weekNo: z.coerce.number(),
   });
 
   const DeleteReservationReqSchema = z.object({
@@ -75,26 +90,33 @@ export async function routes(fastify: FastifyInstance) {
     day: z.coerce.number(),
   });
 
-  fastify.post('/delete-reservation', async function (request, reply) {
+  fastify.post('/:year/:weekNo/delete-reservation', async function (request, reply) {
+    const { year, weekNo } = DeleteReservationParamsSchema.parse(request.params);
     const username = request.cookies['username']!;
     const userId = db
       .selectFrom('user')
       .select('id')
       .where('username', '=', username);
 
-    const body = DeleteReservationReqSchema.parse(request.body);
+    const { fromHour, toHour, day } = DeleteReservationReqSchema.parse(request.body);
+
+    const date = DateTime.utc(year)
+      .plus({ weeks: weekNo - 1 })
+      .setLocale('hu')
+      .startOf('week')
+      .plus({ days: day });
 
     await db
       .deleteFrom('reservation')
       .where((eb) =>
         eb.and([
           eb('user_id', '=', userId),
-          eb('from_hour', '=', body.fromHour),
-          eb('to_hour', '=', body.toHour),
+          eb('from_hour', '=', fromHour),
+          eb('to_hour', '=', toHour),
           eb(
             'date',
             '=',
-            DateTime.now().startOf('week').plus({ days: body.day }).toISODate(),
+            date.toISODate(),
           ),
         ]),
       )

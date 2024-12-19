@@ -40,7 +40,9 @@ export const renderWeekView = async (from: DateTime) => {
             →
           </button>
         </div>
-        <button class="secondary" hx-get={getEditorUrl(from)}>Edit</button>
+        <button class="secondary" hx-get={getEditorUrl(from)}>
+          Edit
+        </button>
       </div>
       <div class="week-view--table-container">
         {WORKING_DAYS.map((d) => (

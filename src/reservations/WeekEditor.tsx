@@ -9,15 +9,16 @@ const WORKING_HOURS = [
 export const renderWeekEditor = async (from: DateTime, username: string) => {
   const reservations = await queryReservations(from, username);
   const weekNo = from.setLocale('hu').weekNumber;
+  const year = from.setLocale('hu').year;
 
   return () => (
     <div
       hx-target="this"
       hx-swap="outerHTML"
-      hx-get="/editor"
+      hx-get={'/week-editor' + getWeekUrl(from)}
       hx-trigger="newReservation deleteReservation from:body"
       class="week-editor--container"
-      x-data="{
+      x-data={`{
           intervalStart: null,
           hourType: 'office',
 
@@ -36,7 +37,7 @@ export const renderWeekEditor = async (from: DateTime, username: string) => {
                 hourType: this.hourType,
               };
               // TODO maybe swap in post response instead of custom event
-              await htmx.ajax('POST', '/reservation', {
+                await htmx.ajax('POST', '/${year}/${weekNo}/reservation', {
                 values,
                 swap: 'none',
               });
@@ -45,11 +46,13 @@ export const renderWeekEditor = async (from: DateTime, username: string) => {
               this.intervalStart = null;
             }
           },
-        }"
-      >
+      }`}
+    >
       <div class="week-editor--title-container">
         <h2>{weekNo}. hét</h2>
-        <button class="secondary" hx-get={getWeekUrl(from)}>Back</button>
+        <button class="secondary" hx-get={'/week-view' + getWeekUrl(from)}>
+          Back
+        </button>
       </div>
       <table class="week-editor--table">
         <thead>
@@ -62,9 +65,7 @@ export const renderWeekEditor = async (from: DateTime, username: string) => {
         </thead>
         <tbody>
           {WORKING_DAYS.map((day) => {
-            const currentDay = from
-              .startOf('week')
-              .plus({ days: day });
+            const currentDay = from.startOf('week').plus({ days: day });
             // Rendering working hours as larger bricks instead of individual
             // squares
             const result = [];
@@ -86,7 +87,7 @@ export const renderWeekEditor = async (from: DateTime, username: string) => {
                     colspan={reservationLength}
                     class={reservation.type}
                     hx-target="this"
-                    hx-post="/delete-reservation"
+                    hx-post={getWeekUrl(from) + '/delete-reservation'}
                     hx-swap="outerHTML"
                     hx-vals={`{"fromHour":${reservation.fromHour},"toHour":${reservation.toHour},"day":${day}}`}
                   >
@@ -160,5 +161,5 @@ const queryReservations = async (from: DateTime, username: string) => {
 };
 
 const getWeekUrl = (from: DateTime) => {
-  return `/week-view/${from.year}/${from.weekNumber}`;
+  return `/${from.year}/${from.weekNumber}`;
 };

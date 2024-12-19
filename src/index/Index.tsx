@@ -10,7 +10,14 @@ export const renderIndex = async (fromDate: DateTime, username?: string) => {
     <body>
       <header>
         <div class="nav--title-container">
-          <h1 class="nav--title" hx-get="/index" hx-push-url="/" hx-target="closest body">Munkaidő</h1>
+          <h1
+            class="nav--title"
+            hx-get="/index"
+            hx-push-url="/"
+            hx-target="closest body"
+          >
+            Munkaidő
+          </h1>
         </div>
         <LoginForm />
       </header>
