@@ -123,13 +123,58 @@ export async function routes(fastify: FastifyInstance) {
       .execute();
 
     reply.header('HX-Trigger', 'newReservation');
+  });
 
-    // If we were to swap results instead of sending a custom event, result
-    // table data would have to have correct metadata as seen in WeekEditor.ts
-    //let replacedHours = [];
-    //for (let i = 0; i <= body.toHour - body.fromHour; i++) {
-    //replacedHours.push(<td/>);
-    //}
-    //return reply.html(<>{replacedHours}</>);
+  const FeelingLuckyParamsSchema = z.object({
+    year: z.coerce.number(),
+    weekNo: z.coerce.number(),
+  });
+
+  fastify.get('/:year/:weekNo/feeling-lucky', async (request, reply) => {
+    const { year, weekNo } = FeelingLuckyParamsSchema.parse(request.params);
+    const username = request.cookies['username']!;
+    const userId = db
+      .selectFrom('user')
+      .select('id')
+      .where('username', '=', username);
+
+    const startOfWeek = DateTime.utc(year)
+      .plus({ weeks: weekNo - 2 }) // The previous week
+      .setLocale('hu')
+      .startOf('week');
+
+    const reservations = await db
+        .selectFrom('reservation')
+        .innerJoin('user', 'user_id', 'user.id')
+      .select([
+        'user.username',
+        'reservation.type',
+        'reservation.date',
+        'reservation.from_hour as fromHour',
+        'reservation.to_hour as toHour',
+        ])
+      .where((eb) =>
+        eb.and([
+          eb('reservation.date', '>=', startOfWeek.toISODate()),
+          eb('reservation.date', '<=', startOfWeek.plus({ days: 6 }).toISODate()),
+          eb('user.username', '=', username),
+        ]),
+      )
+    .execute();
+
+    // Executing as multiple inserts because SQLite has different bulk insert
+    // syntax and Kysely errors out
+    for (const r of reservations) {
+      await db
+      .insertInto('reservation')
+      .values({
+        user_id: userId,
+        from_hour: r.fromHour,
+        to_hour: r.toHour,
+        type: r.type,
+        date: DateTime.fromISO(r.date).plus({ days: 7 }).toISODate()!,
+      })
+      .execute();
+    }
   });
 }

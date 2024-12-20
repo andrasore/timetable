@@ -15,6 +15,7 @@ export type Database = {
 };
 
 const db = new Kysely<Database>({
+  log: ['query', 'error'],
   dialect,
 });
 
