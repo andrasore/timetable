@@ -8,8 +8,7 @@ const WORKING_HOURS = [
 
 export const renderWeekEditor = async (from: DateTime, username: string) => {
   const reservations = await queryReservations(from, username);
-  const weekNo = from.setLocale('hu').weekNumber;
-  const year = from.setLocale('hu').year;
+  const weekNo = from.weekNumber;
 
   return () => (
     <div
@@ -37,7 +36,7 @@ export const renderWeekEditor = async (from: DateTime, username: string) => {
                 hourType: this.hourType,
               };
               // TODO maybe swap in post response instead of custom event
-                await htmx.ajax('POST', '/${year}/${weekNo}/reservation', {
+                await htmx.ajax('POST', '${getWeekUrl(from)}/reservation', {
                 values,
                 swap: 'none',
               });
@@ -65,7 +64,7 @@ export const renderWeekEditor = async (from: DateTime, username: string) => {
         </thead>
         <tbody>
           {WORKING_DAYS.map((day) => {
-            const currentDay = from.startOf('week').plus({ days: day });
+            const currentDay = from.plus({ days: day });
             // Rendering working hours as larger bricks instead of individual
             // squares
             const result = [];
@@ -89,7 +88,7 @@ export const renderWeekEditor = async (from: DateTime, username: string) => {
                     hx-target="this"
                     hx-post={getWeekUrl(from) + '/delete-reservation'}
                     hx-swap="outerHTML"
-                    hx-vals={`{"fromHour":${reservation.fromHour},"toHour":${reservation.toHour},"day":${day}}`}
+                    hx-vals={`{"fromHour":${reservation.fromHour},"toHour":${reservation.toHour},"day":${day + 1}}`}
                   >
                     <div class={`marker--${reservation.type}`} />
                   </td>,
@@ -98,8 +97,8 @@ export const renderWeekEditor = async (from: DateTime, username: string) => {
                 result.push(
                   <td
                     class="week-editor--table-td"
-                    x-on:click={`handleClick(${day},${WORKING_HOURS[i]})`}
-                    x-bind:class={`intervalStart?.day == ${day} && intervalStart?.hour == ${WORKING_HOURS[i]} && 'selected'`}
+                    x-on:click={`handleClick(${day + 1},${WORKING_HOURS[i]})`}
+                    x-bind:class={`intervalStart?.day == ${day + 1} && intervalStart?.hour == ${WORKING_HOURS[i]} && 'selected'`}
                   />,
                 );
               }
@@ -161,5 +160,5 @@ const queryReservations = async (from: DateTime, username: string) => {
 };
 
 const getWeekUrl = (from: DateTime) => {
-  return `/${from.year}/${from.weekNumber}`;
+  return `/${from.weekYear}/${from.weekNumber}`;
 };

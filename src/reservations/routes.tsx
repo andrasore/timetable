@@ -13,7 +13,7 @@ export async function routes(fastify: FastifyInstance) {
 
   fastify.get('/week-view/:year/:weekNo', async function (request, reply) {
     const { year, weekNo } = WeekViewParamsSchema.parse(request.params);
-    const fromDate = DateTime.utc(year).plus({ weeks: weekNo - 1 });
+    const fromDate = DateTime.fromObject({ weekYear: year, weekNumber: weekNo, weekday: 1 });
     const WeekView = await renderWeekView(fromDate);
     return reply.html(<WeekView />);
   });
@@ -26,7 +26,7 @@ export async function routes(fastify: FastifyInstance) {
   fastify.get('/week-editor/:year/:weekNo', async function (request, reply) {
     const username = request.cookies['username'];
     const { year, weekNo } = WeekEditorParamsSchema.parse(request.params);
-    const fromDate = DateTime.utc(year).plus({ weeks: weekNo - 1 });
+    const fromDate = DateTime.fromObject({ weekYear: year, weekNumber: weekNo, weekday: 1 });
     const WeekEditor = await renderWeekEditor(fromDate, username!);
     return reply.html(<WeekEditor />);
   });
@@ -59,11 +59,12 @@ export async function routes(fastify: FastifyInstance) {
       request.body,
     );
 
-    const date = DateTime.utc(year)
-      .plus({ weeks: weekNo - 1 })
-      .setLocale('hu')
-      .startOf('week')
-      .plus({ days: day });
+    const date = DateTime.fromObject({
+      weekYear: year,
+      weekNumber: weekNo,
+      // @ts-expect-error weekday should be WeekdayNumbers | undefined
+      weekday: day
+    });
 
     await db
       .insertInto('reservation')
@@ -100,11 +101,11 @@ export async function routes(fastify: FastifyInstance) {
 
     const { fromHour, toHour, day } = DeleteReservationReqSchema.parse(request.body);
 
-    const date = DateTime.utc(year)
-      .plus({ weeks: weekNo - 1 })
-      .setLocale('hu')
-      .startOf('week')
-      .plus({ days: day });
+    const date = DateTime.fromObject({
+      weekYear: year,
+      // @ts-expect-error weekday should be WeekdayNumbers | undefined
+      weekNumber: weekNo, weekday: day
+    });
 
     await db
       .deleteFrom('reservation')
@@ -138,10 +139,8 @@ export async function routes(fastify: FastifyInstance) {
       .select('id')
       .where('username', '=', username);
 
-    const startOfWeek = DateTime.utc(year)
-      .plus({ weeks: weekNo - 2 }) // The previous week
-      .setLocale('hu')
-      .startOf('week');
+    const startOfWeek = DateTime.fromObject({ year, weekNumber: weekNo })
+      .minus({ weeks: 1 }); // The previous week
 
     const reservations = await db
         .selectFrom('reservation')

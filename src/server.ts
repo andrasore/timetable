@@ -8,6 +8,10 @@ import { routes as indexRoutes } from './index/routes.tsx';
 import { routes as userRoutes } from './users/routes.tsx';
 import { routes as reservationRoutes } from './reservations/routes.tsx';
 import { ErrorPage } from './util/ErrorPage.tsx';
+import { Settings } from 'luxon';
+
+/* TODO add config for locale */
+Settings.defaultLocale = 'hu';
 
 export async function bootstrap(port = 3000) {
   const app = fastify({

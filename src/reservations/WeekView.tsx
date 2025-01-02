@@ -9,14 +9,14 @@ const WORKING_HOURS = [
 export const renderWeekView = async (from: DateTime) => {
   const users = await db.selectFrom('user').select(['username']).execute();
 
-  const weekNo = from.setLocale('hu').weekNumber;
+  const weekNo = from.weekNumber;
   const reservations = await queryReservations(from);
 
   return () => (
     <div
       hx-target="this"
       hx-swap="outerHTML"
-      hx-get={getViewerUrl(from)}
+      hx-get={'/week-view' + getWeekUrl(from)}
       hx-trigger="newUser from:body"
       class="week-view--container"
     >
@@ -25,22 +25,22 @@ export const renderWeekView = async (from: DateTime) => {
           <button
             style="min-width: unset;"
             class="secondary"
-            hx-get={'/week-view' + getPreviousWeekUrl(from)}
-            hx-push-url={getPreviousWeekUrl(from)}
+            hx-get={'/week-view' + getWeekUrl(from.minus({ weeks: 1 }))}
+            hx-push-url={getWeekUrl(from.minus({ weeks: 1 }))}
           >
             ←
           </button>
-          <h2>{weekNo}. hét</h2>
+          <h2 style="width: 6rem; text-align: center;">{weekNo}. hét</h2>
           <button
             style="min-width: unset;"
             class="secondary"
-            hx-get={'/week-view' + getNextWeekUrl(from)}
-            hx-push-url={getNextWeekUrl(from)}
+            hx-get={'/week-view' + getWeekUrl(from.plus({ weeks: 1 }))}
+            hx-push-url={getWeekUrl(from.plus({ weeks: 1 }))}
           >
             →
           </button>
         </div>
-        <button class="secondary" hx-get={getEditorUrl(from)}>
+        <button class="secondary" hx-get={'/week-editor' + getWeekUrl(from)}>
           Edit
         </button>
       </div>
@@ -52,11 +52,7 @@ export const renderWeekView = async (from: DateTime) => {
                 <th />
                 <th colspan={15}>
                   {
-                    /* TODO add config for locale */
-                    DateTime.now()
-                      .startOf('week')
-                      .plus({ days: d })
-                      .setLocale('hu')
+                    from.plus({ days: d })
                       .toFormat('cccc (LLL d)')
                   }
                 </th>
@@ -72,7 +68,7 @@ export const renderWeekView = async (from: DateTime) => {
               <DayTableRows
                 users={users.map((u) => u.username)}
                 reservations={reservations}
-                startOfWeek={from.setLocale('hu')}
+                startOfWeek={from}
                 dayNo={d}
               />
             </tbody>
@@ -155,26 +151,6 @@ const queryReservations = async (from: DateTime) => {
   return Object.groupBy(result, (res) => res.username);
 };
 
-const getPreviousWeekUrl = (from: DateTime) => {
-  if (from.weekNumber == 1) {
-    return `/${from.year - 1}/52`;
-  } else {
-    return `/${from.year}/${from.weekNumber - 1}`;
-  }
-};
-
-const getNextWeekUrl = (from: DateTime) => {
-  if (from.weekNumber == 52) {
-    return `/${from.year + 1}/1`;
-  } else {
-    return `/${from.year}/${from.weekNumber + 1}`;
-  }
-};
-
-const getEditorUrl = (from: DateTime) => {
-  return `/week-editor/${from.year}/${from.weekNumber - 1}`;
-};
-
-const getViewerUrl = (from: DateTime) => {
-  return `/week-view/${from.year}/${from.weekNumber - 1}`;
+const getWeekUrl = (from: DateTime) => {
+  return `/${from.weekYear}/${from.weekNumber}`;
 };

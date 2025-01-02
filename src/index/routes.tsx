@@ -26,7 +26,7 @@ export async function routes(fastify: FastifyInstance) {
 
   fastify.get('/:year/:weekNo', async function (request, reply) {
     const { year, weekNo } = WeekViewParamsSchema.parse(request.params);
-    const fromDate = DateTime.utc(year).plus({ weeks: weekNo - 1 });
+    const fromDate = DateTime.utc(year).plus({ weeks: weekNo });
     const username = request.cookies['username'];
     const Index = await renderIndex(fromDate, username);
     return reply.htmlRoot(<Index />);
