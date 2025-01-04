@@ -3,7 +3,7 @@ import { DateTime } from 'luxon';
 import db from '../db/db.ts';
 import type { FastifyInstance } from 'fastify';
 import { renderWeekView } from './WeekView.tsx';
-import { renderWeekEditor } from './WeekEditor.tsx';
+import { renderWeekEditor, renderWeekEditorTable } from './WeekEditor.tsx';
 
 export async function routes(fastify: FastifyInstance) {
   const WeekViewParamsSchema = z.object({
@@ -13,7 +13,11 @@ export async function routes(fastify: FastifyInstance) {
 
   fastify.get('/week-view/:year/:weekNo', async function (request, reply) {
     const { year, weekNo } = WeekViewParamsSchema.parse(request.params);
-    const fromDate = DateTime.fromObject({ weekYear: year, weekNumber: weekNo, weekday: 1 });
+    const fromDate = DateTime.fromObject({
+      weekYear: year,
+      weekNumber: weekNo,
+      weekday: 1,
+    });
     const WeekView = await renderWeekView(fromDate);
     return reply.html(<WeekView />);
   });
@@ -26,9 +30,25 @@ export async function routes(fastify: FastifyInstance) {
   fastify.get('/week-editor/:year/:weekNo', async function (request, reply) {
     const username = request.cookies['username'];
     const { year, weekNo } = WeekEditorParamsSchema.parse(request.params);
-    const fromDate = DateTime.fromObject({ weekYear: year, weekNumber: weekNo, weekday: 1 });
+    const fromDate = DateTime.fromObject({
+      weekYear: year,
+      weekNumber: weekNo,
+      weekday: 1,
+    });
     const WeekEditor = await renderWeekEditor(fromDate, username!);
     return reply.html(<WeekEditor />);
+  });
+
+  fastify.get('/week-editor-table/:year/:weekNo', async function (request, reply) {
+    const username = request.cookies['username'];
+    const { year, weekNo } = WeekEditorParamsSchema.parse(request.params);
+    const fromDate = DateTime.fromObject({
+      weekYear: year,
+      weekNumber: weekNo,
+      weekday: 1,
+    });
+    const WeekEditorTable = await renderWeekEditorTable(fromDate, username!);
+    return reply.html(<WeekEditorTable />);
   });
 
   const PostReservationParamsSchema = z.object({
@@ -63,7 +83,7 @@ export async function routes(fastify: FastifyInstance) {
       weekYear: year,
       weekNumber: weekNo,
       // @ts-expect-error weekday should be WeekdayNumbers | undefined
-      weekday: day
+      weekday: day,
     });
 
     await db
@@ -91,40 +111,44 @@ export async function routes(fastify: FastifyInstance) {
     day: z.coerce.number(),
   });
 
-  fastify.post('/:year/:weekNo/delete-reservation', async function (request, reply) {
-    const { year, weekNo } = DeleteReservationParamsSchema.parse(request.params);
-    const username = request.cookies['username']!;
-    const userId = db
-      .selectFrom('user')
-      .select('id')
-      .where('username', '=', username);
+  fastify.post(
+    '/:year/:weekNo/delete-reservation',
+    async function (request, reply) {
+      const { year, weekNo } = DeleteReservationParamsSchema.parse(
+        request.params,
+      );
+      const username = request.cookies['username']!;
+      const userId = db
+        .selectFrom('user')
+        .select('id')
+        .where('username', '=', username);
 
-    const { fromHour, toHour, day } = DeleteReservationReqSchema.parse(request.body);
+      const { fromHour, toHour, day } = DeleteReservationReqSchema.parse(
+        request.body,
+      );
 
-    const date = DateTime.fromObject({
-      weekYear: year,
-      // @ts-expect-error weekday should be WeekdayNumbers | undefined
-      weekNumber: weekNo, weekday: day
-    });
+      const date = DateTime.fromObject({
+        weekYear: year,
+        // @ts-expect-error weekday should be WeekdayNumbers | undefined
+        weekNumber: weekNo,
+        weekday: day,
+      });
 
-    await db
-      .deleteFrom('reservation')
-      .where((eb) =>
-        eb.and([
-          eb('user_id', '=', userId),
-          eb('from_hour', '=', fromHour),
-          eb('to_hour', '=', toHour),
-          eb(
-            'date',
-            '=',
-            date.toISODate(),
-          ),
-        ]),
-      )
-      .execute();
+      await db
+        .deleteFrom('reservation')
+        .where((eb) =>
+          eb.and([
+            eb('user_id', '=', userId),
+            eb('from_hour', '=', fromHour),
+            eb('to_hour', '=', toHour),
+            eb('date', '=', date.toISODate()),
+          ]),
+        )
+        .execute();
 
-    reply.header('HX-Trigger', 'newReservation');
-  });
+      reply.header('HX-Trigger', 'newReservation');
+    },
+  );
 
   const FeelingLuckyParamsSchema = z.object({
     year: z.coerce.number(),
@@ -139,41 +163,48 @@ export async function routes(fastify: FastifyInstance) {
       .select('id')
       .where('username', '=', username);
 
-    const startOfWeek = DateTime.fromObject({ year, weekNumber: weekNo, weekday: 1 })
-      .minus({ weeks: 1 });
+    const startOfWeek = DateTime.fromObject({
+      year,
+      weekNumber: weekNo,
+      weekday: 1,
+    }).minus({ weeks: 1 });
 
     const reservations = await db
-        .selectFrom('reservation')
-        .innerJoin('user', 'user_id', 'user.id')
+      .selectFrom('reservation')
+      .innerJoin('user', 'user_id', 'user.id')
       .select([
         'user.username',
         'reservation.type',
         'reservation.date',
         'reservation.from_hour as fromHour',
         'reservation.to_hour as toHour',
-        ])
+      ])
       .where((eb) =>
         eb.and([
           eb('reservation.date', '>=', startOfWeek.toISODate()),
-          eb('reservation.date', '<=', startOfWeek.plus({ days: 6 }).toISODate()),
+          eb(
+            'reservation.date',
+            '<=',
+            startOfWeek.plus({ days: 6 }).toISODate(),
+          ),
           eb('user.username', '=', username),
         ]),
       )
-    .execute();
+      .execute();
 
     // Executing as multiple inserts because SQLite has different bulk insert
     // syntax and Kysely errors out
     for (const r of reservations) {
       await db
-      .insertInto('reservation')
-      .values({
-        user_id: userId,
-        from_hour: r.fromHour,
-        to_hour: r.toHour,
-        type: r.type,
-        date: DateTime.fromISO(r.date).plus({ days: 7 }).toISODate()!,
-      })
-      .execute();
+        .insertInto('reservation')
+        .values({
+          user_id: userId,
+          from_hour: r.fromHour,
+          to_hour: r.toHour,
+          type: r.type,
+          date: DateTime.fromISO(r.date).plus({ days: 7 }).toISODate()!,
+        })
+        .execute();
     }
   });
 }

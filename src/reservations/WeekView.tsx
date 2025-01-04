@@ -51,10 +51,7 @@ export const renderWeekView = async (from: DateTime) => {
               <tr>
                 <th />
                 <th colspan={15}>
-                  {
-                    from.plus({ days: d })
-                      .toFormat('cccc (LLL d)')
-                  }
+                  {from.plus({ days: d }).toFormat('cccc (LLL d)')}
                 </th>
               </tr>
               <tr>

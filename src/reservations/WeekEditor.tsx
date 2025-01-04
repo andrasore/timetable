@@ -14,8 +14,6 @@ export const renderWeekEditor = async (from: DateTime, username: string) => {
     <div
       hx-target="this"
       hx-swap="outerHTML"
-      hx-get={'/week-editor' + getWeekUrl(from)}
-      hx-trigger="newReservation deleteReservation from:body"
       class="week-editor--container"
       x-data={`{
           intervalStart: null,
@@ -36,10 +34,11 @@ export const renderWeekEditor = async (from: DateTime, username: string) => {
                 hourType: this.hourType,
               };
               // TODO maybe swap in post response instead of custom event
-                await htmx.ajax('POST', '${getWeekUrl(from)}/reservation', {
+              await htmx.ajax('POST', '${getWeekUrl(from)}/reservation', {
                 values,
                 swap: 'none',
               });
+              this.intervalStart = null;
             } else {
               // insertion is not valid
               this.intervalStart = null;
@@ -53,7 +52,36 @@ export const renderWeekEditor = async (from: DateTime, username: string) => {
           Back
         </button>
       </div>
-      <table class="week-editor--table" x-bind:class="intervalStart && 'selecting'">
+      <WeekEditorTable from={from} reservations={reservations} />
+      <form class="week-editor--hour-type-container">
+        <HourTypeSelect hourType="office" />
+        <HourTypeSelect hourType="wfh" />
+        <HourTypeSelect hourType="holiday" />
+      </form>
+    </div>
+  );
+};
+
+export const renderWeekEditorTable = async (from: DateTime, username: string) => {
+  const reservations = await queryReservations(from, username);
+  return () => <WeekEditorTable from={from} reservations={reservations}/>;
+}
+
+const WeekEditorTable = ({
+  from,
+  reservations,
+}: {
+  from: DateTime;
+  reservations: Awaited<ReturnType<typeof queryReservations>>;
+}) => (
+      <table
+        class="week-editor--table"
+        x-bind:class="intervalStart && 'selecting'"
+        hx-get={'/week-editor-table' + getWeekUrl(from)}
+        hx-trigger="newReservation deleteReservation from:body"
+        hx-target="this"
+        hx-swap="outerHTML"
+      >
         <thead>
           <tr>
             <th></th>
@@ -63,65 +91,55 @@ export const renderWeekEditor = async (from: DateTime, username: string) => {
           </tr>
         </thead>
         <tbody>
-          {WORKING_DAYS.map((day) => {
-            const currentDay = from.plus({ days: day });
-            // Rendering working hours as larger bricks instead of individual
-            // squares
-            const result = []
-;
-            for (let i = 0; i < WORKING_HOURS.length; i++) {
-              const reservation = reservations?.find(
-                (f) =>
-                  f.fromHour == WORKING_HOURS[i] &&
-                  f.date == currentDay.toISODate(),
-              );
-              if (reservation) {
-                // We do a little hacking...
-                // When a reservation is found we must not iterate the hours it
-                // spans
-                const reservationLength =
-                  reservation.toHour - reservation.fromHour + 1;
-                i += reservationLength - 1;
-                result.push(
-                  <td
-                    colspan={reservationLength}
-                    class={reservation.type}
-                    hx-target="this"
-                    hx-post={getWeekUrl(from) + '/delete-reservation'}
-                    hx-swap="outerHTML"
-                    hx-vals={`{"fromHour":${reservation.fromHour},"toHour":${reservation.toHour},"day":${day + 1}}`}
-                  >
-                    <div class={`marker--${reservation.type}`} />
-                  </td>,
-                );
-              } else {
-                result.push(
-                  <td
-                    class="week-editor--table-td"
-                    x-on:click={`handleClick(${day + 1},${WORKING_HOURS[i]})`}
-                    x-bind:class={`intervalStart?.day == ${day + 1} && intervalStart?.hour == ${WORKING_HOURS[i]} && 'selected--' + hourType`}
-                  />,
-                );
-              }
-            }
-            return (
-              <tr>
-                <td>{currentDay.setLocale('hu').toFormat('cccc')}</td>
-                {result}
-              </tr>
-            );
-          })}
+    {WORKING_DAYS.map((day) => {
+      const currentDay = from.plus({ days: day });
+      // Rendering working hours as larger bricks instead of individual
+      // squares
+      const result = [];
+      for (let i = 0; i < WORKING_HOURS.length; i++) {
+        const reservation = reservations?.find(
+          (f) =>
+            f.fromHour == WORKING_HOURS[i] && f.date == currentDay.toISODate(),
+        );
+        if (reservation) {
+          // We do a little hacking...
+          // When a reservation is found we must not iterate the hours it
+          // spans
+          const reservationLength =
+            reservation.toHour - reservation.fromHour + 1;
+          i += reservationLength - 1;
+          result.push(
+            <td
+              colspan={reservationLength}
+              class={reservation.type}
+              hx-target="this"
+              hx-post={getWeekUrl(from) + '/delete-reservation'}
+              hx-swap="outerHTML"
+              hx-vals={`{"fromHour":${reservation.fromHour},"toHour":${reservation.toHour},"day":${day + 1}}`}
+            >
+              <div class={`marker--${reservation.type}`} />
+            </td>,
+          );
+        } else {
+          result.push(
+            <td
+              class="week-editor--table-td"
+              x-on:click={`handleClick(${day + 1},${WORKING_HOURS[i]})`}
+              x-bind:class={`intervalStart?.day == ${day + 1} && intervalStart?.hour == ${WORKING_HOURS[i]} && 'selected--' + hourType`}
+            />,
+          );
+        }
+      }
+      return (
+        <tr>
+          <td>{currentDay.setLocale('hu').toFormat('cccc')}</td>
+          {result}
+        </tr>
+      );
+    })}
         </tbody>
-      </table>
-      {/* FIXME bug where form is reset after creating a reservation */}
-      <form class="week-editor--hour-type-container">
-        <HourTypeSelect hourType="office" />
-        <HourTypeSelect hourType="wfh" />
-        <HourTypeSelect hourType="holiday" />
-      </form>
-    </div>
-  );
-};
+    </table>
+);
 
 const HourTypeSelect = ({ hourType }: { hourType: string }) => (
   <label for={`radioButton__${hourType}`} class="week-editor--hour-type-select">

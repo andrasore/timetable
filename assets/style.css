@@ -298,11 +298,11 @@ layer(base);
 
   .week-editor--table-td.selected--office {
     background: repeating-linear-gradient(
-        45deg,
-        var(--oc-green-1),
-        var(--oc-green-1) 10px,
-        transparent 10px,
-        transparent 20px
+      45deg,
+      var(--oc-green-1),
+      var(--oc-green-1) 10px,
+      transparent 10px,
+      transparent 20px
     );
     border-top-left-radius: 8px;
     border-bottom-left-radius: 8px;
@@ -310,21 +310,21 @@ layer(base);
 
   .week-editor--table-td.selected--office ~ td:has(~ td:hover) {
     background: repeating-linear-gradient(
-        45deg,
-        var(--oc-green-1),
-        var(--oc-green-1) 10px,
-        transparent 10px,
-        transparent 20px
+      45deg,
+      var(--oc-green-1),
+      var(--oc-green-1) 10px,
+      transparent 10px,
+      transparent 20px
     );
   }
 
   .week-editor--table-td.selected--office ~ td:hover {
     background: repeating-linear-gradient(
-        45deg,
-        var(--oc-green-1),
-        var(--oc-green-1) 10px,
-        transparent 10px,
-        transparent 20px
+      45deg,
+      var(--oc-green-1),
+      var(--oc-green-1) 10px,
+      transparent 10px,
+      transparent 20px
     );
     border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;
@@ -332,11 +332,11 @@ layer(base);
 
   .week-editor--table-td.selected--wfh {
     background: repeating-linear-gradient(
-        45deg,
-        var(--oc-indigo-1),
-        var(--oc-indigo-1) 10px,
-        transparent 10px,
-        transparent 20px
+      45deg,
+      var(--oc-indigo-1),
+      var(--oc-indigo-1) 10px,
+      transparent 10px,
+      transparent 20px
     );
     border-top-left-radius: 8px;
     border-bottom-left-radius: 8px;
@@ -344,21 +344,21 @@ layer(base);
 
   .week-editor--table-td.selected--wfh ~ td:has(~ td:hover) {
     background: repeating-linear-gradient(
-        45deg,
-        var(--oc-indigo-1),
-        var(--oc-indigo-1) 10px,
-        transparent 10px,
-        transparent 20px
+      45deg,
+      var(--oc-indigo-1),
+      var(--oc-indigo-1) 10px,
+      transparent 10px,
+      transparent 20px
     );
   }
 
   .week-editor--table-td.selected--wfh ~ td:hover {
     background: repeating-linear-gradient(
-        45deg,
-        var(--oc-indigo-1),
-        var(--oc-indigo-1) 10px,
-        transparent 10px,
-        transparent 20px
+      45deg,
+      var(--oc-indigo-1),
+      var(--oc-indigo-1) 10px,
+      transparent 10px,
+      transparent 20px
     );
     border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;
@@ -366,11 +366,11 @@ layer(base);
 
   .week-editor--table-td.selected--holiday {
     background: repeating-linear-gradient(
-        45deg,
-        var(--oc-gray-1),
-        var(--oc-gray-1) 10px,
-        transparent 10px,
-        transparent 20px
+      45deg,
+      var(--oc-gray-1),
+      var(--oc-gray-1) 10px,
+      transparent 10px,
+      transparent 20px
     );
     border-top-left-radius: 8px;
     border-bottom-left-radius: 8px;
@@ -378,21 +378,21 @@ layer(base);
 
   .week-editor--table-td.selected--holiday ~ td:has(~ td:hover) {
     background: repeating-linear-gradient(
-        45deg,
-        var(--oc-gray-1),
-        var(--oc-gray-1) 10px,
-        transparent 10px,
-        transparent 20px
+      45deg,
+      var(--oc-gray-1),
+      var(--oc-gray-1) 10px,
+      transparent 10px,
+      transparent 20px
     );
   }
 
   .week-editor--table-td.selected--holiday ~ td:hover {
     background: repeating-linear-gradient(
-        45deg,
-        var(--oc-gray-1),
-        var(--oc-gray-1) 10px,
-        transparent 10px,
-        transparent 20px
+      45deg,
+      var(--oc-gray-1),
+      var(--oc-gray-1) 10px,
+      transparent 10px,
+      transparent 20px
     );
     border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;
