@@ -53,7 +53,7 @@ export const renderWeekEditor = async (from: DateTime, username: string) => {
           Back
         </button>
       </div>
-      <table class="week-editor--table">
+      <table class="week-editor--table" x-bind:class="intervalStart && 'selecting'">
         <thead>
           <tr>
             <th></th>
@@ -67,7 +67,8 @@ export const renderWeekEditor = async (from: DateTime, username: string) => {
             const currentDay = from.plus({ days: day });
             // Rendering working hours as larger bricks instead of individual
             // squares
-            const result = [];
+            const result = []
+;
             for (let i = 0; i < WORKING_HOURS.length; i++) {
               const reservation = reservations?.find(
                 (f) =>
@@ -98,7 +99,7 @@ export const renderWeekEditor = async (from: DateTime, username: string) => {
                   <td
                     class="week-editor--table-td"
                     x-on:click={`handleClick(${day + 1},${WORKING_HOURS[i]})`}
-                    x-bind:class={`intervalStart?.day == ${day + 1} && intervalStart?.hour == ${WORKING_HOURS[i]} && 'selected'`}
+                    x-bind:class={`intervalStart?.day == ${day + 1} && intervalStart?.hour == ${WORKING_HOURS[i]} && 'selected--' + hourType`}
                   />,
                 );
               }

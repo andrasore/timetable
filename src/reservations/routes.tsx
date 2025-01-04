@@ -139,8 +139,8 @@ export async function routes(fastify: FastifyInstance) {
       .select('id')
       .where('username', '=', username);
 
-    const startOfWeek = DateTime.fromObject({ year, weekNumber: weekNo })
-      .minus({ weeks: 1 }); // The previous week
+    const startOfWeek = DateTime.fromObject({ year, weekNumber: weekNo, weekday: 1 })
+      .minus({ weeks: 1 });
 
     const reservations = await db
         .selectFrom('reservation')
