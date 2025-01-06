@@ -78,7 +78,7 @@ const WeekEditorTable = ({
         class="week-editor--table"
         x-bind:class="intervalStart && 'selecting'"
         hx-get={'/week-editor-table' + getWeekUrl(from)}
-        hx-trigger="newReservation deleteReservation from:body"
+        hx-trigger="newReservation from:body, deleteReservation from:body"
         hx-target="this"
         hx-swap="outerHTML"
       >
