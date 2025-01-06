@@ -2,26 +2,9 @@ import z from 'zod';
 import { DateTime } from 'luxon';
 import db from '../db/db.ts';
 import type { FastifyInstance } from 'fastify';
-import { renderWeekView } from './WeekView.tsx';
 import { renderWeekEditor, renderWeekEditorTable } from './WeekEditor.tsx';
 
 export async function routes(fastify: FastifyInstance) {
-  const WeekViewParamsSchema = z.object({
-    year: z.coerce.number(),
-    weekNo: z.coerce.number(),
-  });
-
-  fastify.get('/week-view/:year/:weekNo', async function (request, reply) {
-    const { year, weekNo } = WeekViewParamsSchema.parse(request.params);
-    const fromDate = DateTime.fromObject({
-      weekYear: year,
-      weekNumber: weekNo,
-      weekday: 1,
-    });
-    const WeekView = await renderWeekView(fromDate);
-    return reply.html(<WeekView />);
-  });
-
   const WeekEditorParamsSchema = z.object({
     year: z.coerce.number(),
     weekNo: z.coerce.number(),
@@ -129,8 +112,8 @@ export async function routes(fastify: FastifyInstance) {
 
       const date = DateTime.fromObject({
         weekYear: year,
-        // @ts-expect-error weekday should be WeekdayNumbers | undefined
         weekNumber: weekNo,
+        // @ts-expect-error weekday should be WeekdayNumbers | undefined
         weekday: day,
       });
 

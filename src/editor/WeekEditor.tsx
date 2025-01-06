@@ -48,7 +48,7 @@ export const renderWeekEditor = async (from: DateTime, username: string) => {
     >
       <div class="week-editor--title-container">
         <h2>{weekNo}. hét</h2>
-        <button class="secondary" hx-get={'/week-view' + getWeekUrl(from)}>
+        <button class="secondary" hx-get={'/week-viewer' + getWeekUrl(from)}>
           Back
         </button>
       </div>

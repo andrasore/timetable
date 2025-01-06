@@ -4,9 +4,9 @@ import FastifyStatic from '@fastify/static';
 import FastifyCookie from '@fastify/cookie';
 import FastifyFormbody from '@fastify/formbody';
 import { htmlReply } from './util/htmlReply.ts';
-import { routes as indexRoutes } from './index/routes.tsx';
-import { routes as userRoutes } from './users/routes.tsx';
-import { routes as reservationRoutes } from './reservations/routes.tsx';
+import { routes as viewerRoutes } from './viewer/routes.tsx';
+import { routes as loginRoutes } from './login/routes.tsx';
+import { routes as editorRoutes } from './editor/routes.tsx';
 import { ErrorPage } from './util/ErrorPage.tsx';
 import { Settings } from 'luxon';
 
@@ -51,9 +51,9 @@ export async function bootstrap(port = 3000) {
     }
   });
 
-  await app.register(userRoutes);
-  await app.register(indexRoutes);
-  await app.register(reservationRoutes);
+  await app.register(loginRoutes);
+  await app.register(viewerRoutes);
+  await app.register(editorRoutes);
 
   await app.listen({ port }).catch((err) => {
     app.log.error(err);

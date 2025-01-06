@@ -1,0 +1,38 @@
+@layer app {
+  .nav--title-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .nav--title-container:hover {
+    cursor: pointer;
+  }
+
+  .nav--title {
+    font-family: 'Playwrite HU';
+    color: var(--oc-gray-0);
+    text-shadow: 1px 1px var(--oc-cyan-9);
+  }
+
+  .nav--login-form {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .nav--login-icon {
+    background-image: url('/icons/person-circle-outline.svg');
+    filter: invert() brightness(95%);
+    background-position: center;
+    background-repeat: no-repeat;
+    min-width: 2.5rem;
+    min-height: 2.5rem;
+  }
+
+  .nav--login-name {
+    color: var(--bg);
+  }
+}

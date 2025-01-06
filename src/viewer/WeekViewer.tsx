@@ -6,7 +6,7 @@ const WORKING_HOURS = [
   6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
 ] as const;
 
-export const renderWeekView = async (from: DateTime) => {
+export const renderWeekViewer = async (from: DateTime) => {
   const users = await db.selectFrom('user').select(['username']).execute();
 
   const weekNo = from.weekNumber;
@@ -16,16 +16,16 @@ export const renderWeekView = async (from: DateTime) => {
     <div
       hx-target="this"
       hx-swap="outerHTML"
-      hx-get={'/week-view' + getWeekUrl(from)}
+      hx-get={'/week-viewer' + getWeekUrl(from)}
       hx-trigger="newUser from:body"
-      class="week-view--container"
+      class="week-viewer--container"
     >
-      <div class="week-view--title-container">
+      <div class="week-viewer--title-container">
         <div style="display: flex; gap: 1rem">
           <button
             style="min-width: unset;"
             class="secondary"
-            hx-get={'/week-view' + getWeekUrl(from.minus({ weeks: 1 }))}
+            hx-get={'/week-viewer' + getWeekUrl(from.minus({ weeks: 1 }))}
             hx-push-url={getWeekUrl(from.minus({ weeks: 1 }))}
           >
             ←
@@ -34,7 +34,7 @@ export const renderWeekView = async (from: DateTime) => {
           <button
             style="min-width: unset;"
             class="secondary"
-            hx-get={'/week-view' + getWeekUrl(from.plus({ weeks: 1 }))}
+            hx-get={'/week-viewer' + getWeekUrl(from.plus({ weeks: 1 }))}
             hx-push-url={getWeekUrl(from.plus({ weeks: 1 }))}
           >
             →
@@ -44,9 +44,9 @@ export const renderWeekView = async (from: DateTime) => {
           Edit
         </button>
       </div>
-      <div class="week-view--table-container">
+      <div class="week-viewer--table-container">
         {WORKING_DAYS.map((d) => (
-          <table class="week-view--table">
+          <table class="week-viewer--table">
             <thead>
               <tr>
                 <th />

@@ -1,9 +1,9 @@
 import type { DateTime } from 'luxon';
-import { renderWeekView } from '../reservations/WeekView.tsx';
-import { renderLoginForm } from '../users/LoginForm.tsx';
+import { renderWeekViewer } from './WeekViewer.tsx';
+import { renderLoginForm } from '../login/LoginForm.tsx';
 
 export const renderIndex = async (fromDate: DateTime, username?: string) => {
-  const WeekView = await renderWeekView(fromDate);
+  const WeekViewer = await renderWeekViewer(fromDate);
   const LoginForm = await renderLoginForm(username);
 
   return () => (
@@ -22,7 +22,7 @@ export const renderIndex = async (fromDate: DateTime, username?: string) => {
         <LoginForm />
       </header>
       <main>
-        <WeekView />
+        <WeekViewer />
       </main>
     </body>
   );
